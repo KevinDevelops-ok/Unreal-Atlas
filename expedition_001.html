@@ -1,0 +1,629 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Expedition 001 — Salar de Uyuni | The Unreal Atlas</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Inter:wght@200;300;400;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --color-ink: #1a1a1a;
+            --color-ink-light: #4a4a4a;
+            --color-ink-muted: #7a7a7a;
+            --color-parchment: #faf8f5;
+            --color-parchment-warm: #f5f0e8;
+            --color-accent: #c4a882;
+            --color-accent-text: #816e55;
+            --color-sky: #8fb8d4;
+            --color-sky-deep: #5a8fa8;
+            --font-serif: 'Cormorant Garamond', Georgia, serif;
+            --font-sans: 'Inter', -apple-system, sans-serif;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: var(--font-serif);
+            background: var(--color-parchment);
+            color: var(--color-ink);
+            line-height: 1.7;
+            overflow-x: hidden;
+        }
+
+        /* Hero Section */
+        .hero {
+            position: relative;
+            height: 100vh;
+            min-height: 700px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            background: linear-gradient(180deg, #c5d8e8 0%, #a8c4d8 30%, #8fb8d4 60%, #d4e5f0 100%);
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 40%;
+            background: linear-gradient(to top, rgba(255,255,255,0.9) 0%, rgba(255,255,255,0.3) 50%, transparent 100%);
+            z-index: 2;
+        }
+
+        .hero::after {
+            content: '';
+            position: absolute;
+            bottom: 35%;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: rgba(255,255,255,0.6);
+            z-index: 3;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 10;
+            text-align: center;
+            padding: 2rem;
+        }
+
+        .expedition-number {
+            font-family: var(--font-sans);
+            font-size: 0.7rem;
+            font-weight: 300;
+            letter-spacing: 6px;
+            text-transform: uppercase;
+            color: var(--color-ink-muted);
+            margin-bottom: 1.5rem;
+            opacity: 0;
+            animation: fadeInUp 1.2s ease 0.3s forwards;
+        }
+
+        .hero h1 {
+            font-size: clamp(2.5rem, 6vw, 5rem);
+            font-weight: 300;
+            letter-spacing: -1px;
+            line-height: 1.1;
+            margin-bottom: 1rem;
+            opacity: 0;
+            animation: fadeInUp 1.2s ease 0.6s forwards;
+        }
+
+        .hero-subtitle {
+            font-size: clamp(1rem, 2vw, 1.4rem);
+            font-weight: 300;
+            font-style: italic;
+            color: var(--color-ink-light);
+            opacity: 0;
+            animation: fadeInUp 1.2s ease 0.9s forwards;
+        }
+
+        .hero-location {
+            font-family: var(--font-sans);
+            font-size: 0.75rem;
+            font-weight: 300;
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            color: var(--color-ink-muted);
+            margin-top: 2rem;
+            opacity: 0;
+            animation: fadeInUp 1.2s ease 1.2s forwards;
+        }
+
+        .reading-time {
+            font-family: var(--font-sans);
+            font-size: 0.7rem;
+            font-weight: 300;
+            letter-spacing: 2px;
+            color: var(--color-ink-muted);
+            margin-top: 0.5rem;
+            opacity: 0;
+            animation: fadeInUp 1.2s ease 1.4s forwards;
+        }
+
+        .scroll-indicator {
+            position: absolute;
+            bottom: 3rem;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 10;
+            opacity: 0;
+            animation: fadeInUp 1.2s ease 2s forwards;
+        }
+
+        .scroll-indicator span {
+            display: block;
+            width: 1px;
+            height: 40px;
+            background: var(--color-ink-muted);
+            margin: 0 auto;
+            animation: scrollPulse 2s ease-in-out infinite;
+        }
+
+        .scroll-indicator p {
+            font-family: var(--font-sans);
+            font-size: 0.6rem;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            color: var(--color-ink-muted);
+            margin-top: 0.5rem;
+        }
+
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes scrollPulse {
+            0%, 100% { opacity: 0.3; transform: scaleY(1); }
+            50% { opacity: 1; transform: scaleY(1.2); }
+        }
+
+        /* Navigation */
+        .nav-bar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 100;
+            padding: 1.5rem 3rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: transparent;
+            transition: background 0.4s ease, backdrop-filter 0.4s ease;
+        }
+
+        .nav-bar.scrolled {
+            background: rgba(250, 248, 245, 0.92);
+            backdrop-filter: blur(20px);
+            box-shadow: 0 1px 0 rgba(0,0,0,0.05);
+        }
+
+        .nav-logo {
+            font-family: var(--font-serif);
+            font-size: 1.1rem;
+            font-weight: 400;
+            letter-spacing: 2px;
+            text-decoration: none;
+            color: var(--color-ink);
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+        }
+
+        .nav-links a {
+            font-family: var(--font-sans);
+            font-size: 0.7rem;
+            font-weight: 300;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            text-decoration: none;
+            color: var(--color-ink-light);
+            transition: color 0.3s ease;
+        }
+
+        .nav-links a:hover { color: var(--color-ink); }
+
+        /* Article Content */
+        .article-container {
+            max-width: 720px;
+            margin: 0 auto;
+            padding: 6rem 2rem;
+        }
+
+        .cinematic-opening {
+            font-size: 1.35rem;
+            font-weight: 300;
+            line-height: 1.9;
+            color: var(--color-ink-light);
+            margin-bottom: 4rem;
+            text-align: center;
+            font-style: italic;
+        }
+
+        .cinematic-opening::before {
+            content: '';
+            display: block;
+            width: 40px;
+            height: 1px;
+            background: var(--color-accent);
+            margin: 0 auto 2rem;
+        }
+
+        .chapter {
+            margin-bottom: 5rem;
+            opacity: 0;
+            transform: translateY(40px);
+            transition: opacity 0.8s ease, transform 0.8s ease;
+        }
+
+        .chapter.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .chapter-number {
+            font-family: var(--font-sans);
+            font-size: 0.65rem;
+            font-weight: 300;
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            color: var(--color-accent-text);
+            margin-bottom: 1rem;
+        }
+
+        .chapter h2 {
+            font-size: clamp(1.6rem, 3vw, 2.2rem);
+            font-weight: 400;
+            margin-bottom: 2rem;
+            line-height: 1.3;
+        }
+
+        .chapter p {
+            font-size: 1.1rem;
+            line-height: 1.9;
+            margin-bottom: 1.5rem;
+            color: var(--color-ink-light);
+        }
+
+        .chapter p:first-of-type::first-letter {
+            font-size: 3.5rem;
+            float: left;
+            line-height: 1;
+            padding-right: 0.5rem;
+            padding-top: 0.2rem;
+            font-weight: 400;
+            color: var(--color-ink);
+        }
+
+        .pull-quote {
+            margin: 3rem 0;
+            padding: 2rem 0;
+            border-top: 1px solid var(--color-accent);
+            border-bottom: 1px solid var(--color-accent);
+            text-align: center;
+        }
+
+        .pull-quote p {
+            font-size: 1.5rem;
+            font-style: italic;
+            font-weight: 300;
+            line-height: 1.6;
+            color: var(--color-ink);
+            margin: 0;
+        }
+
+        .pull-quote cite {
+            display: block;
+            font-family: var(--font-sans);
+            font-size: 0.7rem;
+            font-style: normal;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            color: var(--color-ink-muted);
+            margin-top: 1rem;
+        }
+
+        /* Expedition Notes */
+        .expedition-notes {
+            background: var(--color-parchment-warm);
+            padding: 3rem;
+            margin: 4rem 0;
+            border-left: 3px solid var(--color-accent);
+        }
+
+        .expedition-notes h3 {
+            font-family: var(--font-sans);
+            font-size: 0.7rem;
+            font-weight: 400;
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            color: var(--color-accent-text);
+            margin-bottom: 1.5rem;
+        }
+
+        .expedition-notes ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .expedition-notes li {
+            font-family: var(--font-sans);
+            font-size: 0.85rem;
+            line-height: 2;
+            color: var(--color-ink-light);
+            padding-left: 1.5rem;
+            position: relative;
+        }
+
+        .expedition-notes li::before {
+            content: '—';
+            position: absolute;
+            left: 0;
+            color: var(--color-accent-text);
+        }
+
+        /* Final Reflection */
+        .final-reflection {
+            margin-top: 5rem;
+            padding-top: 3rem;
+            border-top: 1px solid rgba(0,0,0,0.1);
+        }
+
+        .final-reflection h3 {
+            font-family: var(--font-sans);
+            font-size: 0.7rem;
+            font-weight: 400;
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            color: var(--color-accent-text);
+            margin-bottom: 1.5rem;
+        }
+
+        .final-reflection p {
+            font-size: 1.2rem;
+            font-style: italic;
+            line-height: 2;
+            color: var(--color-ink-light);
+        }
+
+        /* Footer Navigation */
+        .footer-nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 3rem;
+            border-top: 1px solid rgba(0,0,0,0.1);
+            max-width: 720px;
+            margin: 0 auto;
+        }
+
+        .footer-nav a {
+            font-family: var(--font-sans);
+            font-size: 0.75rem;
+            font-weight: 300;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            text-decoration: none;
+            color: var(--color-ink-light);
+            transition: color 0.3s ease;
+        }
+
+        .footer-nav a:hover { color: var(--color-ink); }
+
+        .footer-nav .current {
+            color: var(--color-accent-text);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .nav-bar { padding: 1rem 1.5rem; }
+            .nav-links { gap: 1rem; }
+            .article-container { padding: 4rem 1.5rem; }
+            .expedition-notes { padding: 2rem 1.5rem; }
+            .chapter p:first-of-type::first-letter { font-size: 2.5rem; }
+        }
+    
+        /* ========================================================
+           POLISH — typography refinement, accessible focus states,
+           button / link micro-interactions, small editorial details
+           ======================================================== */
+
+        body {
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            text-rendering: optimizeLegibility;
+            font-variant-numeric: oldstyle-nums;
+        }
+
+        h1, h2, h3 { text-wrap: balance; }
+
+        p { text-wrap: pretty; orphans: 3; widows: 3; }
+
+        .pull-quote p, .cinematic-opening, .final-reflection p, .welcome-section p {
+            hanging-punctuation: first allow-end;
+        }
+
+        ::selection {
+            background: var(--color-accent);
+            color: var(--color-parchment, #faf8f5);
+        }
+
+        /* Keyboard focus states */
+        a:focus-visible,
+        .scroll-indicator:focus-visible,
+        .expedition-card:focus-visible {
+            outline: 1px solid var(--color-accent);
+            outline-offset: 4px;
+            border-radius: 1px;
+        }
+
+        /* Scroll indicator: now a real, clickable, focusable link */
+        .scroll-indicator {
+            text-decoration: none;
+            transition: opacity 0.3s ease;
+        }
+        .scroll-indicator:hover { opacity: 0.65 !important; }
+
+        /* Primary CTA */
+        .closing-cta {
+            cursor: pointer;
+            transition: background 0.3s ease, color 0.3s ease, letter-spacing 0.3s ease, box-shadow 0.3s ease, transform 0.15s ease;
+        }
+        .closing-cta:hover { letter-spacing: 5px; box-shadow: 0 10px 30px rgba(0,0,0,0.25); }
+        .closing-cta:active { transform: scale(0.97); }
+
+        /* Expedition cards */
+        .expedition-card { cursor: pointer; }
+        .expedition-card:active { transform: translateY(-1px) scale(0.995); }
+
+        /* Nav links: animated underline */
+        .nav-links a { position: relative; }
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            left: 0;
+            right: 100%;
+            bottom: -4px;
+            height: 1px;
+            background: currentColor;
+            transition: right 0.3s ease;
+        }
+        .nav-links a:hover::after { right: 0; }
+
+        /* Footer prev/next: directional nudge on hover */
+        .footer-nav a {
+            display: inline-block;
+            transition: color 0.3s ease, transform 0.3s ease;
+        }
+        .footer-nav a:first-child:hover { transform: translateX(-4px); }
+        .footer-nav a:last-child:hover { transform: translateX(4px); }
+
+        /* Respect reduced-motion preference */
+        @media (prefers-reduced-motion: reduce) {
+            *, *::before, *::after {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+                scroll-behavior: auto !important;
+            }
+        }
+
+    </style>
+</head>
+<body>
+    <nav class="nav-bar" id="navbar">
+        <a href="index.html" class="nav-logo">The Unreal Atlas</a>
+        <div class="nav-links">
+            <a href="index.html#expeditions">Expeditions</a>
+            <a href="index.html#about">About</a>
+        </div>
+    </nav>
+
+    <header class="hero">
+        <div class="hero-content">
+            <p class="expedition-number">Expedition 001</p>
+            <h1>Salar de Uyuni</h1>
+            <p class="hero-subtitle">Where Earth Reflects the Sky</p>
+            <p class="hero-location">Potosí Department, Bolivia · 3,656 meters above sea level</p>
+            <p class="reading-time">Reading Time: 12 minutes</p>
+        </div>
+        <a href="#begin" class="scroll-indicator" aria-label="Scroll to begin reading">
+            <span></span>
+            <p>Begin</p>
+        </a>
+    </header>
+
+    <article class="article-container" id="begin">
+        <div class="cinematic-opening">
+            There is a place where the horizon ceases to exist—not because it is too far, but because it has dissolved into the sky itself. Stand upon the salt at the right hour, and you will no longer know which way is up. The earth has become a mirror, and the mirror has become infinite.
+        </div>
+
+        <section class="chapter" data-chapter="1">
+            <p class="chapter-number">Chapter I</p>
+            <h2>The White Desert</h2>
+            <p>The first thing you notice is the silence. Not the quiet of an empty room, but the profound, almost physical silence of a landscape that has never known a tree, a bird, or the whisper of a stream. Salar de Uyuni does not merely lack sound—it seems to absorb it, as if the salt itself hungers for the vibrations of the living world.</p>
+            <p>At 10,582 square kilometers, it is the largest salt flat on Earth, a vast white expanse that stretches across the Altiplano of southwest Bolivia like a frozen ocean turned to crystal. The numbers are staggering enough on paper—larger than some countries, visible from space—but they do nothing to prepare you for the experience of standing at its center. The salt crust, in places up to ten meters thick, is composed of approximately eleven billion tons of sodium chloride, with interbedded layers of mud and brine that tell a story spanning millions of years.</p>
+            <p>But this is not a desert of sand. It is a desert of salt, born from an ancient lake that once covered this entire region. Lake Minchin, as geologists have named it, existed during the late Pleistocene epoch, some 30,000 to 42,000 years ago. It was a vast inland sea, fed by the meltwaters of glaciers and the rivers that descended from the Andes. When the climate shifted and the glaciers retreated, the lake began to evaporate. What remained was not water, but salt—layer upon layer of it, crystallizing in the thin, dry air of the high plateau.</p>
+            <p>The process continues today. During the wet season, from November to March, a thin film of water covers the salt flat, transforming it into the world's largest natural mirror. The water is rarely more than a few centimeters deep, but that is all that is needed. The surface becomes so perfectly reflective that astronauts have used it to calibrate instruments aboard satellites. From orbit, Salar de Uyuni appears as a brilliant white rectangle, a geometric anomaly in the irregular tapestry of the Earth.</p>
+
+            <div class="pull-quote">
+                <p>"The surface becomes so perfectly reflective that astronauts have used it to calibrate instruments aboard satellites."</p>
+                <cite>— NASA Earth Observatory</cite>
+            </div>
+
+            <p>Walking across the dry salt is a peculiar sensation. The crust crunches beneath your boots with a sound like breaking glass, yet it holds your weight with surprising firmness. Hexagonal patterns tile the surface in every direction, each cell a shallow depression where brine has evaporated and left its mineral signature. These patterns are not random—they are the result of convection currents in the underlying brine, a slow, geological rhythm that has repeated itself for millennia.</p>
+            <p>The salt is not pure white, as one might expect. Close inspection reveals subtle variations: patches of pale rose where iron oxides have stained the crystals, veins of gray where volcanic minerals have intruded, and occasional pockets of vivid yellow and green where halophilic algae and bacteria have found a foothold. Life, it seems, persists even here, in one of the most hostile environments on the planet.</p>
+        </section>
+
+        <section class="chapter" data-chapter="2">
+            <p class="chapter-number">Chapter II</p>
+            <h2>The Mirror Season</h2>
+            <p>There is a particular quality to the light at 3,656 meters above sea level. The air is thin here—so thin that visitors often find themselves breathless after a short walk—and the sky seems to press down with an intensity that is both exhilarating and slightly unnerving. The ultraviolet radiation is fierce, and the temperature swings between scorching days and freezing nights with a violence that would shatter lesser landscapes.</p>
+            <p>But it is during the wet season that Salar de Uyuni reveals its most extraordinary face. When the rains come, they do not merely wet the salt—they transform it. A thin sheet of water, sometimes no deeper than a breath, spreads across the entire flat, creating a mirror so perfect that the boundary between earth and sky ceases to exist. Stand at the right moment, when the clouds are scattered and the sun hangs low, and you will find yourself suspended between two heavens.</p>
+            <p>The effect is not merely visual—it is existential. Visitors report a profound sense of disorientation, a loss of the self that borders on the mystical. The horizon, that line we have relied upon since childhood to orient ourselves in space, simply vanishes. There is no up, no down, no near or far. Only an endless, luminous void that seems to extend into eternity.</p>
+            <p>Photographers have long understood the unique properties of this place. During the mirror season, the salt flat becomes a studio without walls, a space where perspective itself becomes malleable. Objects placed upon the surface appear to float in an infinite white space. The play of light and reflection creates optical illusions that defy the eye and challenge the mind. A toy car becomes a vehicle traversing the cosmos. A group of travelers becomes silhouettes against a sky that exists both above and below them.</p>
+            <p>The science behind this phenomenon is elegant in its simplicity. The salt crust, compressed and leveled by millennia of evaporation and crystallization, is extraordinarily flat. Satellite measurements have confirmed that the surface variation across the entire flat is less than one meter—making it, in effect, one of the flattest places on Earth. When water covers this surface, it creates a plane of reflection that is almost mathematically perfect.</p>
+            <p>But science, for all its precision, cannot fully capture the experience. There is something in the mirror season that transcends explanation—a quality of light, a quality of silence, a quality of space that speaks to something older than reason. Perhaps it is the memory of the ancient lake, still whispering through the brine. Perhaps it is the sheer scale of the place, which reduces the human observer to a speck of consciousness adrift in an infinite white sea. Or perhaps it is simply that, for a brief moment, the Earth has chosen to reveal itself as it truly is: not a solid thing, but a surface of light and reflection, a place where everything is connected to everything else.</p>
+        </section>
+
+        <section class="chapter" data-chapter="3">
+            <p class="chapter-number">Chapter III</p>
+            <h2>Islands in the White Sea</h2>
+            <p>Scattered across the salt flat like ships anchored in a frozen ocean are islands of rock and cactus, remnants of the ancient landscape that existed before the lake evaporated. The most famous of these is Isla Incahuasi, a hump of volcanic rock that rises abruptly from the salt, its surface covered in giant cacti that seem to belong to another world entirely.</p>
+            <p>The cacti of Isla Incahuasi are Echinopsis atacamensis, a species that can grow to heights of over twelve meters and live for more than a thousand years. They stand like sentinels upon the rocky hill, their arms raised toward a sun that burns without mercy. To see them is to understand something about time. These plants were seedlings when the Inca Empire was at its height. They were already ancient when the Spanish arrived. And they will likely still be standing when the cities of the modern world have crumbled to dust.</p>
+            <p>The island itself is composed of coral and petrified algae, a fossil record of the time when this entire region lay beneath the waters of Lake Minchin. Climb to its summit, and you will find yourself surrounded by a 360-degree panorama of white nothingness, the salt flat extending to every horizon like a sea that has been turned to stone. It is a view that induces vertigo—not from height, but from the sheer impossibility of the scale.</p>
+            <p>Other islands dot the salt flat, each with its own character and history. Isla de los Pescadores, named for the fish that once swam in the ancient lake, now contains only their fossilized remains, embedded in the rock like memories of a wetter world. Isla del Pescado, with its distinctive fish-like shape when viewed from above, has become a landmark for travelers crossing the flat. Each island is a world unto itself, a microcosm of life persisting in the midst of an environment that seems designed to extinguish it.</p>
+            <p>The islands are not merely geological curiosities. They are waypoints, rest stops, places of refuge in a landscape that offers no shelter. For the indigenous peoples of the region—the Aymara and Quechua communities who have lived here for thousands of years—these islands have always held spiritual significance. They are places where the earth breaks through the salt, where the ancient world makes itself known to the present. Offerings of coca leaves and alcohol are still left upon their slopes, prayers to Pachamama, the Mother Earth, who provides even in this most barren of places.</p>
+        </section>
+
+        <section class="chapter" data-chapter="4">
+            <p class="chapter-number">Chapter IV</p>
+            <h2>The Lithium Beneath</h2>
+            <p>Beneath the salt crust, hidden from view, lies a resource that may shape the future of human civilization. The brine that saturates the layers beneath Salar de Uyuni contains the world's largest known deposit of lithium, the lightest metal on Earth and a critical component of the batteries that power our phones, laptops, and increasingly, our cars.</p>
+            <p>The concentration is extraordinary. Estimates suggest that beneath the salt flat lies between 50 and 70 percent of the world's known lithium reserves, dissolved in brine pools that extend hundreds of meters below the surface. The extraction process is relatively simple—pump the brine to the surface, allow it to evaporate in vast pools, and harvest the lithium salts that remain—but the implications are complex and far-reaching.</p>
+            <p>Bolivia, one of South America's poorest nations, stands atop a resource that could transform its economy. And yet, the country has been cautious. Previous governments have resisted foreign investment, insisting that any extraction must benefit the Bolivian people first. The tension between economic necessity and environmental preservation, between the demands of the global market and the rights of indigenous communities, has made Salar de Uyuni a stage upon which the dramas of the twenty-first century are being played out.</p>
+            <p>The environmental concerns are real. Lithium extraction requires vast amounts of water—approximately 500,000 gallons per ton of lithium produced. In a region where water is already scarce, where local communities depend upon limited aquifers for their survival, the prospect of industrial-scale extraction raises profound questions about sustainability and justice. The salt flat is not merely a landscape; it is an ecosystem, a cultural heritage site, and a spiritual place. To transform it into a mine would be to alter something that has existed for millennia, something that belongs not just to Bolivia, but to the world.</p>
+            <p>And yet, the lithium is there. It waits beneath the salt, in the brine that has accumulated over millions of years, a resource formed by the same geological processes that created the mirror itself. The question is not whether it will be extracted, but how, and by whom, and at what cost. Salar de Uyuni, in its infinite whiteness, holds within it the contradictions of our age: the desire for clean energy, the hunger for economic development, the need to preserve the irreplaceable.</p>
+        </section>
+
+        <div class="expedition-notes">
+            <h3>Expedition Notes</h3>
+            <ul>
+                <li>The salt flat sits at an elevation of 3,656 meters (11,995 feet) above sea level</li>
+                <li>The crust contains approximately 11 billion tons of salt</li>
+                <li>Surface variation across the entire flat is less than 1 meter</li>
+                <li>The wet season (November–March) creates the famous mirror effect</li>
+                <li>Isla Incahuasi's giant cacti can live for over 1,000 years</li>
+                <li>Beneath the salt lies an estimated 50–70% of the world's known lithium reserves</li>
+                <li>The hexagonal salt patterns form through brine convection currents</li>
+                <li>Lake Minchin, the ancient predecessor, existed 30,000–42,000 years ago</li>
+            </ul>
+        </div>
+
+        <div class="final-reflection">
+            <h3>Final Reflection</h3>
+            <p>To stand upon Salar de Uyuni is to stand at the edge of understanding. The mirror does not merely reflect the sky—it reflects something within us, some ancient recognition of our own smallness in the face of infinity. We come here seeking wonder, and we find it. But we also find something else: a quiet reminder that the Earth is older than our ambitions, vaster than our dreams, and infinitely more beautiful than anything we could ever create. The salt will outlast us all. The mirror will remain, reflecting skies we will never see, waiting for eyes that have not yet evolved to gaze upon it. And in that knowledge, there is both humility and hope.</p>
+        </div>
+    </article>
+
+    <nav class="footer-nav">
+        <a href="index.html">← Return to Atlas</a>
+        <span class="current">Expedition 001 of 010</span>
+        <a href="expedition_002.html">Next Expedition →</a>
+    </nav>
+
+    <script>
+        // Navbar scroll effect
+        const navbar = document.getElementById('navbar');
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 100) {
+                navbar.classList.add('scrolled');
+            } else {
+                navbar.classList.remove('scrolled');
+            }
+        });
+
+        // Chapter reveal animation
+        const chapters = document.querySelectorAll('.chapter');
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, { threshold: 0.15 });
+
+        chapters.forEach(chapter => observer.observe(chapter));
+    </script>
+</body>
+</html>

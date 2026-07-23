@@ -1,0 +1,619 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Expedition 007 — Lake Hillier | The Unreal Atlas</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Inter:wght@200;300;400;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --color-ink: #1a1a1a;
+            --color-ink-light: #4a4a4a;
+            --color-ink-muted: #7a7a7a;
+            --color-parchment: #faf5f5;
+            --color-parchment-warm: #f5e8e8;
+            --color-accent: #c4788a;
+            --color-accent-text: #9c5f6e;
+            --color-pink: #e8a0b0;
+            --font-serif: 'Cormorant Garamond', Georgia, serif;
+            --font-sans: 'Inter', -apple-system, sans-serif;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: var(--font-serif);
+            background: var(--color-parchment);
+            color: var(--color-ink);
+            line-height: 1.7;
+            overflow-x: hidden;
+        }
+
+        .hero {
+            position: relative;
+            height: 100vh;
+            min-height: 700px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            background: linear-gradient(180deg, #f0d8e0 0%, #e8c0d0 30%, #e0a8c0 60%, #d898b0 100%);
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: 
+                radial-gradient(ellipse at 50% 50%, rgba(255,220,230,0.4) 0%, transparent 60%),
+                radial-gradient(ellipse at 30% 70%, rgba(255,200,220,0.3) 0%, transparent 40%);
+            z-index: 1;
+        }
+
+        .hero::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 50%;
+            background: linear-gradient(to top, var(--color-parchment) 0%, transparent 100%);
+            z-index: 2;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 10;
+            text-align: center;
+            padding: 2rem;
+        }
+
+        .expedition-number {
+            font-family: var(--font-sans);
+            font-size: 0.7rem;
+            font-weight: 300;
+            letter-spacing: 6px;
+            text-transform: uppercase;
+            color: rgba(255,255,255,0.7);
+            margin-bottom: 1.5rem;
+            opacity: 0;
+            animation: fadeInUp 1.2s ease 0.3s forwards;
+        }
+
+        .hero h1 {
+            font-size: clamp(2.5rem, 6vw, 5rem);
+            font-weight: 300;
+            letter-spacing: -1px;
+            line-height: 1.1;
+            margin-bottom: 1rem;
+            color: #fff5f8;
+            opacity: 0;
+            animation: fadeInUp 1.2s ease 0.6s forwards;
+        }
+
+        .hero-subtitle {
+            font-size: clamp(1rem, 2vw, 1.4rem);
+            font-weight: 300;
+            font-style: italic;
+            color: rgba(255,245,248,0.85);
+            opacity: 0;
+            animation: fadeInUp 1.2s ease 0.9s forwards;
+        }
+
+        .hero-location {
+            font-family: var(--font-sans);
+            font-size: 0.75rem;
+            font-weight: 300;
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            color: rgba(255,245,248,0.6);
+            margin-top: 2rem;
+            opacity: 0;
+            animation: fadeInUp 1.2s ease 1.2s forwards;
+        }
+
+        .reading-time {
+            font-family: var(--font-sans);
+            font-size: 0.7rem;
+            font-weight: 300;
+            letter-spacing: 2px;
+            color: rgba(255,245,248,0.5);
+            margin-top: 0.5rem;
+            opacity: 0;
+            animation: fadeInUp 1.2s ease 1.4s forwards;
+        }
+
+        .scroll-indicator {
+            position: absolute;
+            bottom: 3rem;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 10;
+            opacity: 0;
+            animation: fadeInUp 1.2s ease 2s forwards;
+        }
+
+        .scroll-indicator span {
+            display: block;
+            width: 1px;
+            height: 40px;
+            background: rgba(255,245,248,0.5);
+            margin: 0 auto;
+            animation: scrollPulse 2s ease-in-out infinite;
+        }
+
+        .scroll-indicator p {
+            font-family: var(--font-sans);
+            font-size: 0.6rem;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            color: rgba(255,245,248,0.5);
+            margin-top: 0.5rem;
+        }
+
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes scrollPulse {
+            0%, 100% { opacity: 0.3; transform: scaleY(1); }
+            50% { opacity: 1; transform: scaleY(1.2); }
+        }
+
+        .nav-bar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 100;
+            padding: 1.5rem 3rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: transparent;
+            transition: background 0.4s ease, backdrop-filter 0.4s ease;
+        }
+
+        .nav-bar.scrolled {
+            background: rgba(250, 245, 245, 0.95);
+            backdrop-filter: blur(20px);
+            box-shadow: 0 1px 0 rgba(0,0,0,0.05);
+        }
+
+        .nav-bar.scrolled .nav-logo,
+        .nav-bar.scrolled .nav-links a { color: var(--color-ink); }
+
+        .nav-logo {
+            font-family: var(--font-serif);
+            font-size: 1.1rem;
+            font-weight: 400;
+            letter-spacing: 2px;
+            text-decoration: none;
+            color: #fff5f8;
+            transition: color 0.4s ease;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+        }
+
+        .nav-links a {
+            font-family: var(--font-sans);
+            font-size: 0.7rem;
+            font-weight: 300;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            text-decoration: none;
+            color: rgba(255,245,248,0.7);
+            transition: color 0.3s ease;
+        }
+
+        .nav-links a:hover { color: #fff5f8; }
+
+        .article-container {
+            max-width: 720px;
+            margin: 0 auto;
+            padding: 6rem 2rem;
+        }
+
+        .cinematic-opening {
+            font-size: 1.35rem;
+            font-weight: 300;
+            line-height: 1.9;
+            color: var(--color-ink-light);
+            margin-bottom: 4rem;
+            text-align: center;
+            font-style: italic;
+        }
+
+        .cinematic-opening::before {
+            content: '';
+            display: block;
+            width: 40px;
+            height: 1px;
+            background: var(--color-accent);
+            margin: 0 auto 2rem;
+        }
+
+        .chapter {
+            margin-bottom: 5rem;
+            opacity: 0;
+            transform: translateY(40px);
+            transition: opacity 0.8s ease, transform 0.8s ease;
+        }
+
+        .chapter.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .chapter-number {
+            font-family: var(--font-sans);
+            font-size: 0.65rem;
+            font-weight: 300;
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            color: var(--color-accent-text);
+            margin-bottom: 1rem;
+        }
+
+        .chapter h2 {
+            font-size: clamp(1.6rem, 3vw, 2.2rem);
+            font-weight: 400;
+            margin-bottom: 2rem;
+            line-height: 1.3;
+        }
+
+        .chapter p {
+            font-size: 1.1rem;
+            line-height: 1.9;
+            margin-bottom: 1.5rem;
+            color: var(--color-ink-light);
+        }
+
+        .chapter p:first-of-type::first-letter {
+            font-size: 3.5rem;
+            float: left;
+            line-height: 1;
+            padding-right: 0.5rem;
+            padding-top: 0.2rem;
+            font-weight: 400;
+            color: var(--color-ink);
+        }
+
+        .pull-quote {
+            margin: 3rem 0;
+            padding: 2rem 0;
+            border-top: 1px solid var(--color-accent);
+            border-bottom: 1px solid var(--color-accent);
+            text-align: center;
+        }
+
+        .pull-quote p {
+            font-size: 1.5rem;
+            font-style: italic;
+            font-weight: 300;
+            line-height: 1.6;
+            color: var(--color-ink);
+            margin: 0;
+        }
+
+        .pull-quote cite {
+            display: block;
+            font-family: var(--font-sans);
+            font-size: 0.7rem;
+            font-style: normal;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            color: var(--color-ink-muted);
+            margin-top: 1rem;
+        }
+
+        .expedition-notes {
+            background: var(--color-parchment-warm);
+            padding: 3rem;
+            margin: 4rem 0;
+            border-left: 3px solid var(--color-accent);
+        }
+
+        .expedition-notes h3 {
+            font-family: var(--font-sans);
+            font-size: 0.7rem;
+            font-weight: 400;
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            color: var(--color-accent-text);
+            margin-bottom: 1.5rem;
+        }
+
+        .expedition-notes ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .expedition-notes li {
+            font-family: var(--font-sans);
+            font-size: 0.85rem;
+            line-height: 2;
+            color: var(--color-ink-light);
+            padding-left: 1.5rem;
+            position: relative;
+        }
+
+        .expedition-notes li::before {
+            content: '—';
+            position: absolute;
+            left: 0;
+            color: var(--color-accent-text);
+        }
+
+        .final-reflection {
+            margin-top: 5rem;
+            padding-top: 3rem;
+            border-top: 1px solid rgba(0,0,0,0.1);
+        }
+
+        .final-reflection h3 {
+            font-family: var(--font-sans);
+            font-size: 0.7rem;
+            font-weight: 400;
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            color: var(--color-accent-text);
+            margin-bottom: 1.5rem;
+        }
+
+        .final-reflection p {
+            font-size: 1.2rem;
+            font-style: italic;
+            line-height: 2;
+            color: var(--color-ink-light);
+        }
+
+        .footer-nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 3rem;
+            border-top: 1px solid rgba(0,0,0,0.1);
+            max-width: 720px;
+            margin: 0 auto;
+        }
+
+        .footer-nav a {
+            font-family: var(--font-sans);
+            font-size: 0.75rem;
+            font-weight: 300;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            text-decoration: none;
+            color: var(--color-ink-light);
+            transition: color 0.3s ease;
+        }
+
+        .footer-nav a:hover { color: var(--color-ink); }
+
+        .footer-nav .current {
+            color: var(--color-accent-text);
+        }
+
+        @media (max-width: 768px) {
+            .nav-bar { padding: 1rem 1.5rem; }
+            .nav-links { gap: 1rem; }
+            .article-container { padding: 4rem 1.5rem; }
+            .expedition-notes { padding: 2rem 1.5rem; }
+            .chapter p:first-of-type::first-letter { font-size: 2.5rem; }
+        }
+    
+        /* ========================================================
+           POLISH — typography refinement, accessible focus states,
+           button / link micro-interactions, small editorial details
+           ======================================================== */
+
+        body {
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            text-rendering: optimizeLegibility;
+            font-variant-numeric: oldstyle-nums;
+        }
+
+        h1, h2, h3 { text-wrap: balance; }
+
+        p { text-wrap: pretty; orphans: 3; widows: 3; }
+
+        .pull-quote p, .cinematic-opening, .final-reflection p, .welcome-section p {
+            hanging-punctuation: first allow-end;
+        }
+
+        ::selection {
+            background: var(--color-accent);
+            color: var(--color-parchment, #faf8f5);
+        }
+
+        /* Keyboard focus states */
+        a:focus-visible,
+        .scroll-indicator:focus-visible,
+        .expedition-card:focus-visible {
+            outline: 1px solid var(--color-accent);
+            outline-offset: 4px;
+            border-radius: 1px;
+        }
+
+        /* Scroll indicator: now a real, clickable, focusable link */
+        .scroll-indicator {
+            text-decoration: none;
+            transition: opacity 0.3s ease;
+        }
+        .scroll-indicator:hover { opacity: 0.65 !important; }
+
+        /* Primary CTA */
+        .closing-cta {
+            cursor: pointer;
+            transition: background 0.3s ease, color 0.3s ease, letter-spacing 0.3s ease, box-shadow 0.3s ease, transform 0.15s ease;
+        }
+        .closing-cta:hover { letter-spacing: 5px; box-shadow: 0 10px 30px rgba(0,0,0,0.25); }
+        .closing-cta:active { transform: scale(0.97); }
+
+        /* Expedition cards */
+        .expedition-card { cursor: pointer; }
+        .expedition-card:active { transform: translateY(-1px) scale(0.995); }
+
+        /* Nav links: animated underline */
+        .nav-links a { position: relative; }
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            left: 0;
+            right: 100%;
+            bottom: -4px;
+            height: 1px;
+            background: currentColor;
+            transition: right 0.3s ease;
+        }
+        .nav-links a:hover::after { right: 0; }
+
+        /* Footer prev/next: directional nudge on hover */
+        .footer-nav a {
+            display: inline-block;
+            transition: color 0.3s ease, transform 0.3s ease;
+        }
+        .footer-nav a:first-child:hover { transform: translateX(-4px); }
+        .footer-nav a:last-child:hover { transform: translateX(4px); }
+
+        /* Respect reduced-motion preference */
+        @media (prefers-reduced-motion: reduce) {
+            *, *::before, *::after {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+                scroll-behavior: auto !important;
+            }
+        }
+
+    </style>
+</head>
+<body>
+    <nav class="nav-bar" id="navbar">
+        <a href="index.html" class="nav-logo">The Unreal Atlas</a>
+        <div class="nav-links">
+            <a href="index.html#expeditions">Expeditions</a>
+            <a href="index.html#about">About</a>
+        </div>
+    </nav>
+
+    <header class="hero">
+        <div class="hero-content">
+            <p class="expedition-number">Expedition 007</p>
+            <h1>Lake Hillier</h1>
+            <p class="hero-subtitle">The Lake That Chose Pink</p>
+            <p class="hero-location">Middle Island, Recherche Archipelago, Western Australia</p>
+            <p class="reading-time">Reading Time: 11 minutes</p>
+        </div>
+        <a href="#begin" class="scroll-indicator" aria-label="Scroll to begin reading">
+            <span></span>
+            <p>Begin</p>
+        </a>
+    </header>
+
+    <article class="article-container" id="begin">
+        <div class="cinematic-opening">
+            There are lakes that are blue, and lakes that are green, and lakes that are the color of the sky on a cloudy day. And then there is a lake that is pink. Not slightly pink, not pinkish, but a vivid, bubblegum, almost aggressively pink that seems to declare its independence from every other body of water on Earth. It is not a trick of the light. It is not a digital filter. It is simply, defiantly, unmistakably pink.
+        </div>
+
+        <section class="chapter" data-chapter="1">
+            <p class="chapter-number">Chapter I</p>
+            <h2>The Island in the Southern Ocean</h2>
+            <p>Lake Hillier sits on Middle Island, the largest of the islands in the Recherche Archipelago, a scattering of rocky outcrops that lies off the coast of Esperance in Western Australia. The archipelago consists of over 100 islands, most of them uninhabited, many of them little more than bare rock and scrub. Middle Island is approximately 6.5 kilometers long and 2.5 kilometers wide, a low-lying hump of granite and limestone that rises barely 50 meters above the surrounding sea. From the air, it looks like a green jewel set in a ring of turquoise, and at its center, like a drop of rose-colored ink, is the lake.</p>
+            <p>The island is remote. It lies approximately 130 kilometers east of Esperance, accessible only by boat or aircraft. There are no permanent human settlements on Middle Island, and visits are restricted to protect the fragile ecosystem. The Recherche Archipelago is a nature reserve, home to a diverse array of wildlife including sea lions, penguins, and a variety of seabirds. The waters around the islands are rich in marine life, with coral reefs, kelp forests, and populations of fish that attract seals and sharks. It is a wild place, a fragment of coastline that has been left largely untouched by the developments that have transformed so much of Australia's shores.</p>
+            <p>The lake itself is small, approximately 600 meters long and 250 meters wide, with a maximum depth of only about one meter. It is separated from the Southern Ocean by a thin strip of sand and vegetation, a natural barrier that prevents the saltwater from mixing with the lake's contents. This separation is crucial to the lake's unique color. The water in Lake Hillier is not merely pink; it is also extremely saline, with a salt concentration that rivals or exceeds that of the Dead Sea. The combination of high salinity, specific microbial life, and the lake's isolation from the ocean creates the conditions for its extraordinary hue.</p>
+            <p>The island was first visited by European explorers in 1802, when Matthew Flinders, the British navigator who would later circumnavigate Australia, stopped at Middle Island during his survey of the southern coast. Flinders noted the lake in his journal, describing it as "a small lake of a rose colour." He was not the first to see it, of course. The Noongar people, the indigenous inhabitants of the region, had known about the lake for thousands of years, though their stories and knowledge of it have been largely lost to the disruptions of colonization.</p>
+
+            <div class="pull-quote">
+                <p>"Flinders noted the lake in his journal, describing it as 'a small lake of a rose colour.'"</p>
+                <cite>— Matthew Flinders, A Voyage to Terra Australis, 1814</cite>
+            </div>
+
+            <p>The pink color of Lake Hillier is permanent. Unlike some other colored lakes, which change hue with the seasons or the time of day, Lake Hillier maintains its pink color year-round. If you were to collect a sample of the water in a clear container, it would remain pink. It is not an optical illusion caused by the reflection of the surrounding landscape or the bottom of the lake. The color is in the water itself, a product of the microscopic organisms that live within it and the chemical environment that they have created.</p>
+        </section>
+
+        <section class="chapter" data-chapter="2">
+            <p class="chapter-number">Chapter II</p>
+            <h2>The Pink Microbe</h2>
+            <p>The color of Lake Hillier is produced by a combination of factors, but the primary contributor is a species of algae called Dunaliella salina. This is not an ordinary algae. It is an extremophile, an organism that thrives in conditions that would kill most other forms of life. Dunaliella salina can survive in water with a salinity of up to 35 percent—nearly ten times the salinity of seawater. In such extreme conditions, it produces large amounts of carotenoids, pigments that range from yellow to orange to red. The specific combination of carotenoids produced by the algae in Lake Hillier gives the water its distinctive pink color.</p>
+            <p>But Dunaliella salina is not the only organism responsible for the lake's hue. The water also contains a species of halophilic bacteria, Halobacterium, which thrives in high-salt environments and produces pigments of its own. In addition, there are halophilic archaea, single-celled organisms that are distinct from both bacteria and eukaryotes, and which also contribute to the coloration. The pink of Lake Hillier is not the product of a single organism, but of an entire ecosystem of extremophiles, each contributing its own pigments to the collective palette.</p>
+            <p>The carotenoids produced by Dunaliella salina are not merely decorative. They serve a protective function, shielding the algae's chlorophyll from the intense sunlight that beats down on the lake's surface. In the high-salinity environment, the algae are under constant osmotic stress—the tendency of water to flow out of their cells into the surrounding salt solution. The carotenoids help to stabilize the cell membranes, protecting the algae from damage. They are, in a sense, the algae's armor, a biochemical defense against an environment that is constantly trying to draw the water from their bodies.</p>
+            <p>The high salinity of the lake is itself a product of the island's geography. Lake Hillier has no outlet. Water enters the lake from rainfall and from the surrounding groundwater, but it can only leave through evaporation. As the water evaporates, the dissolved salts are left behind, gradually concentrating over thousands of years. The result is a brine so salty that it is difficult for most organisms to survive. But for Dunaliella salina and its fellow extremophiles, this environment is not a threat—it is a home.</p>
+            <p>The study of extremophiles like those in Lake Hillier has become increasingly important in recent years. These organisms have evolved biochemical strategies that allow them to survive in conditions of extreme heat, cold, acidity, alkalinity, salinity, and radiation. Understanding these strategies has implications for medicine, biotechnology, and even the search for life on other planets. If organisms can survive in the pink brine of Lake Hillier, then perhaps they can survive in the salt deposits of Mars or the subsurface oceans of Europa. The lake is not merely a curiosity; it is a laboratory, a window into the limits of what life can endure.</p>
+        </section>
+
+        <section class="chapter" data-chapter="3">
+            <p class="chapter-number">Chapter III</p>
+            <h2>The Bubblegum Shore</h2>
+            <p>Approaching Lake Hillier by air is an experience that defies preparation. You know, intellectually, that the lake is pink. You have seen photographs. You have read descriptions. But nothing prepares you for the moment when the island comes into view and you see, with your own eyes, a body of water that is the color of cotton candy set against the deep blue of the ocean. The contrast is so striking, so fundamentally wrong according to everything you know about the natural world, that your first reaction is often disbelief.</p>
+            <p>The lake is separated from the ocean by a narrow strip of sand, perhaps 50 meters wide, covered in low vegetation and small shrubs. On one side, the Southern Ocean stretches to the horizon in shades of turquoise and deep blue, its surface broken by whitecaps and the occasional dark shape of a seal or a shark. On the other side, the lake sits in its bubblegum serenity, its pink surface reflecting the sky in a way that makes the clouds appear to float in rose-tinted water. The sand between them is white, a neutral zone between two colors that have no business existing side by side.</p>
+            <p>The pink color is visible from the shore, but it is most striking from above. Aerial photographs of Lake Hillier have become iconic, appearing in travel magazines, nature documentaries, and social media feeds around the world. The image of the pink lake, surrounded by the blue ocean and the green island, has a quality of unreality that makes it instantly shareable. It looks like a computer-generated image, a fantasy landscape created for a film or a video game. The fact that it is real only adds to its power.</p>
+            <p>Swimming in Lake Hillier is possible, though not common. The high salinity makes floating effortless—like the Dead Sea, the lake's density is high enough to support a human body with minimal effort. The water is not toxic; the organisms that produce the pink color are harmless to humans. But the lake is protected, and swimming is generally discouraged to preserve the fragile ecosystem. The lake is not a swimming pool. It is a living thing, a community of organisms that have evolved over millennia to create something unique in the world. To disturb it for the sake of a novelty swim would be to diminish something that cannot be replaced.</p>
+        </section>
+
+        <section class="chapter" data-chapter="4">
+            <p class="chapter-number">Chapter IV</p>
+            <h2>Other Pink Lakes</h2>
+            <p>Lake Hillier is not the only pink lake in the world, though it is perhaps the most famous. There are other lakes that share its distinctive color, each with its own story and its own ecosystem. Lake Retba, in Senegal, is perhaps the most well-known after Hillier, its pink waters drawing tourists and salt harvesters alike. Hutt Lagoon, in Western Australia, is another pink lake, its color varying with the seasons and the concentration of algae. The Salinas de Torrevieja, in Spain, and the Masazir Lake, in Azerbaijan, are also known for their pink hues.</p>
+            <p>Each of these lakes has its own unique characteristics. Lake Retba, for example, is intensely pink during the dry season, when the salinity is at its highest, but fades to a more normal color during the rainy season. Hutt Lagoon's color changes with the time of day, the season, and the amount of cloud cover, ranging from purple to red to a pale, almost translucent pink. The variability of these lakes makes them fascinating subjects of study, but it also makes Lake Hillier's consistency all the more remarkable. While other pink lakes change with the seasons, Hillier remains pink year-round, a steadfast anomaly in a world of natural variation.</p>
+            <p>The existence of multiple pink lakes raises interesting questions about the conditions that produce them. All of them share certain characteristics: high salinity, the presence of Dunaliella salina or similar algae, and isolation from freshwater inputs that would dilute the salt concentration. But each lake also has its own unique combination of factors—temperature, nutrient availability, pH, and the specific strains of algae and bacteria that have colonized it. The pink color is not a single phenomenon, but a family of related phenomena, each with its own particular expression.</p>
+            <p>What makes Lake Hillier special is not merely its color, but its setting. The contrast between the pink lake and the blue ocean, the green island and the white sand, creates a visual composition that is unmatched by any other pink lake in the world. It is a place where color itself becomes the subject, where the natural world seems to have made an aesthetic choice that no human designer could improve upon. The lake is not just pink. It is perfectly, defiantly, joyfully pink, a declaration of nature's capacity for surprise.</p>
+        </section>
+
+        <div class="expedition-notes">
+            <h3>Expedition Notes</h3>
+            <ul>
+                <li>Lake Hillier is approximately 600m long and 250m wide</li>
+                <li>Maximum depth is only about 1 meter</li>
+                <li>Primary color source: Dunaliella salina algae producing carotenoid pigments</li>
+                <li>Halobacterium and halophilic archaea also contribute to coloration</li>
+                <li>Salinity rivals or exceeds that of the Dead Sea</li>
+                <li>First noted by Matthew Flinders in 1802</li>
+                <li>Located on Middle Island, 130km east of Esperance, Western Australia</li>
+                <li>Color remains permanent year-round, unlike other pink lakes</li>
+            </ul>
+        </div>
+
+        <div class="final-reflection">
+            <h3>Final Reflection</h3>
+            <p>Lake Hillier is a reminder that nature has not finished surprising us. In a world where we have mapped the genome, photographed the depths of the ocean, and sent probes to the edge of the solar system, there is still a lake in Australia that is pink for reasons we are only beginning to understand. It is a reminder that wonder does not require scale. The lake is small, shallow, and remote. It has no waterfalls, no mountains, no dramatic geological features. And yet, it is one of the most extraordinary places on Earth. The pink water is not merely a color. It is a statement, a declaration that the natural world still holds secrets, still has the capacity to defy our expectations, still has the power to make us stop and stare in disbelief. In a world that often feels too known, too mapped, too explained, Lake Hillier is a gift. It is the Earth winking at us, reminding us that we do not know everything, and that the things we do not know are often the most beautiful of all.</p>
+        </div>
+    </article>
+
+    <nav class="footer-nav">
+        <a href="expedition_006.html">← Previous</a>
+        <span class="current">Expedition 007 of 010</span>
+        <a href="expedition_008.html">Next Expedition →</a>
+    </nav>
+
+    <script>
+        const navbar = document.getElementById('navbar');
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 100) {
+                navbar.classList.add('scrolled');
+            } else {
+                navbar.classList.remove('scrolled');
+            }
+        });
+
+        const chapters = document.querySelectorAll('.chapter');
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, { threshold: 0.15 });
+
+        chapters.forEach(chapter => observer.observe(chapter));
+    </script>
+</body>
+</html>

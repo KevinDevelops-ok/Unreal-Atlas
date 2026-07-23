@@ -1,0 +1,624 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Expedition 002 — Socotra Island | The Unreal Atlas</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Inter:wght@200;300;400;500&family=Space+Mono:wght@400&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --color-ink: #1a1a1a;
+            --color-ink-light: #4a4a4a;
+            --color-ink-muted: #7a7a7a;
+            --color-parchment: #f8f6f0;
+            --color-parchment-warm: #f0ece2;
+            --color-accent: #8b7355;
+            --color-accent-text: #826c4f;
+            --color-alien: #6b8e5a;
+            --color-alien-deep: #4a6b3a;
+            --font-serif: 'Cormorant Garamond', Georgia, serif;
+            --font-sans: 'Inter', -apple-system, sans-serif;
+            --font-mono: 'Space Mono', monospace;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: var(--font-serif);
+            background: var(--color-parchment);
+            color: var(--color-ink);
+            line-height: 1.7;
+            overflow-x: hidden;
+        }
+
+        .hero {
+            position: relative;
+            height: 100vh;
+            min-height: 700px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            background: linear-gradient(160deg, #2d3a25 0%, #3d4f30 20%, #5a6b45 50%, #7a8f5a 80%, #a8b88a 100%);
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.03'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+            z-index: 1;
+        }
+
+        .hero::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 50%;
+            background: linear-gradient(to top, var(--color-parchment) 0%, transparent 100%);
+            z-index: 2;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 10;
+            text-align: center;
+            padding: 2rem;
+        }
+
+        .expedition-number {
+            font-family: var(--font-mono);
+            font-size: 0.65rem;
+            font-weight: 400;
+            letter-spacing: 6px;
+            text-transform: uppercase;
+            color: rgba(255,255,255,0.5);
+            margin-bottom: 1.5rem;
+            opacity: 0;
+            animation: fadeInUp 1.2s ease 0.3s forwards;
+        }
+
+        .hero h1 {
+            font-size: clamp(2.5rem, 6vw, 5rem);
+            font-weight: 300;
+            letter-spacing: -1px;
+            line-height: 1.1;
+            margin-bottom: 1rem;
+            color: #f5f0e0;
+            opacity: 0;
+            animation: fadeInUp 1.2s ease 0.6s forwards;
+        }
+
+        .hero-subtitle {
+            font-size: clamp(1rem, 2vw, 1.4rem);
+            font-weight: 300;
+            font-style: italic;
+            color: rgba(245,240,224,0.7);
+            opacity: 0;
+            animation: fadeInUp 1.2s ease 0.9s forwards;
+        }
+
+        .hero-location {
+            font-family: var(--font-mono);
+            font-size: 0.7rem;
+            font-weight: 400;
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            color: rgba(245,240,224,0.5);
+            margin-top: 2rem;
+            opacity: 0;
+            animation: fadeInUp 1.2s ease 1.2s forwards;
+        }
+
+        .reading-time {
+            font-family: var(--font-mono);
+            font-size: 0.65rem;
+            font-weight: 400;
+            letter-spacing: 2px;
+            color: rgba(245,240,224,0.4);
+            margin-top: 0.5rem;
+            opacity: 0;
+            animation: fadeInUp 1.2s ease 1.4s forwards;
+        }
+
+        .scroll-indicator {
+            position: absolute;
+            bottom: 3rem;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 10;
+            opacity: 0;
+            animation: fadeInUp 1.2s ease 2s forwards;
+        }
+
+        .scroll-indicator span {
+            display: block;
+            width: 1px;
+            height: 40px;
+            background: rgba(245,240,224,0.4);
+            margin: 0 auto;
+            animation: scrollPulse 2s ease-in-out infinite;
+        }
+
+        .scroll-indicator p {
+            font-family: var(--font-mono);
+            font-size: 0.6rem;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            color: rgba(245,240,224,0.4);
+            margin-top: 0.5rem;
+        }
+
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes scrollPulse {
+            0%, 100% { opacity: 0.3; transform: scaleY(1); }
+            50% { opacity: 1; transform: scaleY(1.2); }
+        }
+
+        .nav-bar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 100;
+            padding: 1.5rem 3rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: transparent;
+            transition: background 0.4s ease, backdrop-filter 0.4s ease;
+        }
+
+        .nav-bar.scrolled {
+            background: rgba(248, 246, 240, 0.95);
+            backdrop-filter: blur(20px);
+            box-shadow: 0 1px 0 rgba(0,0,0,0.05);
+        }
+
+        .nav-bar.scrolled .nav-logo,
+        .nav-bar.scrolled .nav-links a { color: var(--color-ink); }
+
+        .nav-logo {
+            font-family: var(--font-serif);
+            font-size: 1.1rem;
+            font-weight: 400;
+            letter-spacing: 2px;
+            text-decoration: none;
+            color: #f5f0e0;
+            transition: color 0.4s ease;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+        }
+
+        .nav-links a {
+            font-family: var(--font-sans);
+            font-size: 0.7rem;
+            font-weight: 300;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            text-decoration: none;
+            color: rgba(245,240,224,0.7);
+            transition: color 0.3s ease;
+        }
+
+        .nav-links a:hover { color: #f5f0e0; }
+
+        .article-container {
+            max-width: 720px;
+            margin: 0 auto;
+            padding: 6rem 2rem;
+        }
+
+        .cinematic-opening {
+            font-size: 1.35rem;
+            font-weight: 300;
+            line-height: 1.9;
+            color: var(--color-ink-light);
+            margin-bottom: 4rem;
+            text-align: center;
+            font-style: italic;
+        }
+
+        .cinematic-opening::before {
+            content: '';
+            display: block;
+            width: 40px;
+            height: 1px;
+            background: var(--color-alien);
+            margin: 0 auto 2rem;
+        }
+
+        .chapter {
+            margin-bottom: 5rem;
+            opacity: 0;
+            transform: translateY(40px);
+            transition: opacity 0.8s ease, transform 0.8s ease;
+        }
+
+        .chapter.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .chapter-number {
+            font-family: var(--font-mono);
+            font-size: 0.65rem;
+            font-weight: 400;
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            color: var(--color-alien);
+            margin-bottom: 1rem;
+        }
+
+        .chapter h2 {
+            font-size: clamp(1.6rem, 3vw, 2.2rem);
+            font-weight: 400;
+            margin-bottom: 2rem;
+            line-height: 1.3;
+        }
+
+        .chapter p {
+            font-size: 1.1rem;
+            line-height: 1.9;
+            margin-bottom: 1.5rem;
+            color: var(--color-ink-light);
+        }
+
+        .chapter p:first-of-type::first-letter {
+            font-size: 3.5rem;
+            float: left;
+            line-height: 1;
+            padding-right: 0.5rem;
+            padding-top: 0.2rem;
+            font-weight: 400;
+            color: var(--color-ink);
+        }
+
+        .pull-quote {
+            margin: 3rem 0;
+            padding: 2rem 0;
+            border-top: 1px solid var(--color-alien);
+            border-bottom: 1px solid var(--color-alien);
+            text-align: center;
+        }
+
+        .pull-quote p {
+            font-size: 1.5rem;
+            font-style: italic;
+            font-weight: 300;
+            line-height: 1.6;
+            color: var(--color-ink);
+            margin: 0;
+        }
+
+        .pull-quote cite {
+            display: block;
+            font-family: var(--font-mono);
+            font-size: 0.65rem;
+            font-style: normal;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            color: var(--color-ink-muted);
+            margin-top: 1rem;
+        }
+
+        .expedition-notes {
+            background: var(--color-parchment-warm);
+            padding: 3rem;
+            margin: 4rem 0;
+            border-left: 3px solid var(--color-alien);
+        }
+
+        .expedition-notes h3 {
+            font-family: var(--font-mono);
+            font-size: 0.65rem;
+            font-weight: 400;
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            color: var(--color-alien);
+            margin-bottom: 1.5rem;
+        }
+
+        .expedition-notes ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .expedition-notes li {
+            font-family: var(--font-sans);
+            font-size: 0.85rem;
+            line-height: 2;
+            color: var(--color-ink-light);
+            padding-left: 1.5rem;
+            position: relative;
+        }
+
+        .expedition-notes li::before {
+            content: '>';
+            position: absolute;
+            left: 0;
+            color: var(--color-alien);
+            font-family: var(--font-mono);
+        }
+
+        .final-reflection {
+            margin-top: 5rem;
+            padding-top: 3rem;
+            border-top: 1px solid rgba(0,0,0,0.1);
+        }
+
+        .final-reflection h3 {
+            font-family: var(--font-mono);
+            font-size: 0.65rem;
+            font-weight: 400;
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            color: var(--color-alien);
+            margin-bottom: 1.5rem;
+        }
+
+        .final-reflection p {
+            font-size: 1.2rem;
+            font-style: italic;
+            line-height: 2;
+            color: var(--color-ink-light);
+        }
+
+        .footer-nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 3rem;
+            border-top: 1px solid rgba(0,0,0,0.1);
+            max-width: 720px;
+            margin: 0 auto;
+        }
+
+        .footer-nav a {
+            font-family: var(--font-sans);
+            font-size: 0.75rem;
+            font-weight: 300;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            text-decoration: none;
+            color: var(--color-ink-light);
+            transition: color 0.3s ease;
+        }
+
+        .footer-nav a:hover { color: var(--color-ink); }
+
+        .footer-nav .current {
+            font-family: var(--font-mono);
+            color: var(--color-alien);
+        }
+
+        @media (max-width: 768px) {
+            .nav-bar { padding: 1rem 1.5rem; }
+            .nav-links { gap: 1rem; }
+            .article-container { padding: 4rem 1.5rem; }
+            .expedition-notes { padding: 2rem 1.5rem; }
+            .chapter p:first-of-type::first-letter { font-size: 2.5rem; }
+        }
+    
+        /* ========================================================
+           POLISH — typography refinement, accessible focus states,
+           button / link micro-interactions, small editorial details
+           ======================================================== */
+
+        body {
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            text-rendering: optimizeLegibility;
+            font-variant-numeric: oldstyle-nums;
+        }
+
+        h1, h2, h3 { text-wrap: balance; }
+
+        p { text-wrap: pretty; orphans: 3; widows: 3; }
+
+        .pull-quote p, .cinematic-opening, .final-reflection p, .welcome-section p {
+            hanging-punctuation: first allow-end;
+        }
+
+        ::selection {
+            background: var(--color-accent);
+            color: var(--color-parchment, #faf8f5);
+        }
+
+        /* Keyboard focus states */
+        a:focus-visible,
+        .scroll-indicator:focus-visible,
+        .expedition-card:focus-visible {
+            outline: 1px solid var(--color-accent);
+            outline-offset: 4px;
+            border-radius: 1px;
+        }
+
+        /* Scroll indicator: now a real, clickable, focusable link */
+        .scroll-indicator {
+            text-decoration: none;
+            transition: opacity 0.3s ease;
+        }
+        .scroll-indicator:hover { opacity: 0.65 !important; }
+
+        /* Primary CTA */
+        .closing-cta {
+            cursor: pointer;
+            transition: background 0.3s ease, color 0.3s ease, letter-spacing 0.3s ease, box-shadow 0.3s ease, transform 0.15s ease;
+        }
+        .closing-cta:hover { letter-spacing: 5px; box-shadow: 0 10px 30px rgba(0,0,0,0.25); }
+        .closing-cta:active { transform: scale(0.97); }
+
+        /* Expedition cards */
+        .expedition-card { cursor: pointer; }
+        .expedition-card:active { transform: translateY(-1px) scale(0.995); }
+
+        /* Nav links: animated underline */
+        .nav-links a { position: relative; }
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            left: 0;
+            right: 100%;
+            bottom: -4px;
+            height: 1px;
+            background: currentColor;
+            transition: right 0.3s ease;
+        }
+        .nav-links a:hover::after { right: 0; }
+
+        /* Footer prev/next: directional nudge on hover */
+        .footer-nav a {
+            display: inline-block;
+            transition: color 0.3s ease, transform 0.3s ease;
+        }
+        .footer-nav a:first-child:hover { transform: translateX(-4px); }
+        .footer-nav a:last-child:hover { transform: translateX(4px); }
+
+        /* Respect reduced-motion preference */
+        @media (prefers-reduced-motion: reduce) {
+            *, *::before, *::after {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+                scroll-behavior: auto !important;
+            }
+        }
+
+    </style>
+</head>
+<body>
+    <nav class="nav-bar" id="navbar">
+        <a href="index.html" class="nav-logo">The Unreal Atlas</a>
+        <div class="nav-links">
+            <a href="index.html#expeditions">Expeditions</a>
+            <a href="index.html#about">About</a>
+        </div>
+    </nav>
+
+    <header class="hero">
+        <div class="hero-content">
+            <p class="expedition-number">Expedition 002</p>
+            <h1>Socotra Island</h1>
+            <p class="hero-subtitle">The Island Evolution Forgot</p>
+            <p class="hero-location">Arabian Sea, Yemen · 380 kilometers off the Horn of Africa</p>
+            <p class="reading-time">Reading Time: 14 minutes</p>
+        </div>
+        <a href="#begin" class="scroll-indicator" aria-label="Scroll to begin reading">
+            <span></span>
+            <p>Begin</p>
+        </a>
+    </header>
+
+    <article class="article-container" id="begin">
+        <div class="cinematic-opening">
+            There are places on Earth that do not feel like Earth at all. Places where the trees look like they were designed by a fever dream, where the rocks seem to breathe, where every living thing appears to have arrived from a planet with different rules. Socotra is such a place. It is not an island. It is a question.
+        </div>
+
+        <section class="chapter" data-chapter="1">
+            <p class="chapter-number">Chapter I</p>
+            <h2>The Ark of Evolution</h2>
+            <p>Socotra did not break away from the mainland yesterday. It did not drift into isolation a thousand years ago, or ten thousand, or even a hundred thousand. The island separated from the Arabian Peninsula approximately 20 to 30 million years ago, during the Oligocene epoch, when the Arabian Plate began its slow collision with the Eurasian continent. Since that moment, Socotra has been alone.</p>
+            <p>This isolation is the key to everything. While the rest of the world marched through epochs of climate change, mass extinction, and the rise and fall of countless species, Socotra remained a sanctuary. The creatures that arrived on its shores—blown by wind, carried by ocean currents, or deposited by ancient land bridges—found themselves in a world without competition. No large predators. No aggressive invaders. No human interference, at least not for most of its history. Evolution here proceeded not through struggle, but through experimentation.</p>
+            <p>The result is a biological treasure trove unlike anything else on Earth. Of the approximately 825 plant species found on Socotra, 37 percent are endemic—found nowhere else in the world. The reptile endemism rate is even higher, at 90 percent. The island has been described by biologists as the "Galápagos of the Indian Ocean," but even that comparison falls short. The Galápagos are young, geologically speaking, and their isolation is measured in thousands of years. Socotra's isolation is measured in millions.</p>
+            <p>The island's geography itself seems designed to preserve secrets. A central plateau of granite and limestone rises to over 1,500 meters, catching the moisture-laden winds of the monsoon and creating microclimates that range from arid coastal desert to mist-shrouded mountain forest. Deep canyons cut through the landscape like scars, their walls revealing layers of geological history that span eons. Caves honeycomb the limestone, some containing stalactites and stalagmites that have been growing for hundreds of thousands of years, others harboring rock art left by the island's earliest human inhabitants.</p>
+
+            <div class="pull-quote">
+                <p>"Of the approximately 825 plant species found on Socotra, 37 percent are endemic—found nowhere else in the world."</p>
+                <cite>— Center for Middle Eastern Plants, Royal Botanic Garden Edinburgh</cite>
+            </div>
+
+            <p>The coastline is equally dramatic. On the northern shore, white sand beaches give way to turquoise waters that hide coral reefs teeming with life. On the southern shore, towering limestone cliffs plunge straight into the sea, their faces pockmarked with caves that were once used as burial chambers. The sea around Socotra is among the most biodiverse in the Indian Ocean, home to over 250 species of coral and 700 species of fish, many of which are also found nowhere else.</p>
+            <p>But it is the plants that command attention. They are not merely unusual; they are otherworldly. They seem to have evolved according to a logic that is alien to the rest of the planet, as if the island itself were running a parallel experiment in the nature of life.</p>
+        </section>
+
+        <section class="chapter" data-chapter="2">
+            <p class="chapter-number">Chapter II</p>
+            <h2>The Dragon's Blood Tree</h2>
+            <p>There is no plant on Earth quite like Dracaena cinnabari, the Dragon's Blood Tree. Its appearance is so striking, so utterly unlike anything in the botanical world, that it seems to belong not to a living ecosystem, but to the pages of a fantasy novel. A thick, stout trunk rises from the rocky ground, branching repeatedly into a dense crown of stiff, sword-shaped leaves. The overall effect is that of an upside-down umbrella, or perhaps a mushroom cloud frozen in time.</p>
+            <p>The tree can reach heights of over ten meters and live for more than 600 years. But it is not its size or longevity that makes it remarkable—it is its form. The umbrella shape is not accidental. It is an evolutionary solution to a specific problem: how to survive in an environment with almost no soil, minimal rainfall, and relentless sun. The dense crown of leaves captures moisture from the frequent mists that roll across the island's highlands. The thick trunk stores water for the dry months. The umbrella shape maximizes shade for the roots while minimizing water loss through transpiration. Every aspect of the tree's architecture is a response to the demands of its environment.</p>
+            <p>But the Dragon's Blood Tree is more than a biological curiosity. It is a cultural icon, a sacred plant that has been woven into the identity of Socotra's people for millennia. The name comes from the tree's resin, a deep crimson sap that oozes from wounds in the bark. This resin has been used since ancient times as a medicine, a dye, a varnish, and a cosmetic. The Egyptians imported it for embalming. The Romans used it as a pigment. Medieval Europeans believed it to be the actual blood of dragons, a substance of immense magical power.</p>
+            <p>The resin's chemical composition is complex, containing a mixture of compounds that have been shown to possess antioxidant, anti-inflammatory, and antimicrobial properties. Modern pharmacology has taken an interest in Dracaena resin, recognizing in its ancient uses the potential for new medicines. The tree, in other words, is not merely a survivor of deep time—it is a living pharmacy, a repository of biochemical knowledge accumulated over millions of years of evolution.</p>
+            <p>Today, the Dragon's Blood Tree faces an uncertain future. Climate change is altering the island's rainfall patterns, and the mist-laden clouds that the trees depend upon are becoming less reliable. Grazing by goats, which were introduced to the island centuries ago, prevents young trees from establishing themselves. The population is aging, with few seedlings surviving to maturity. Conservationists warn that without intervention, this iconic species could disappear within a few human generations—a blink of an eye in the tree's evolutionary history.</p>
+        </section>
+
+        <section class="chapter" data-chapter="3">
+            <p class="chapter-number">Chapter III</p>
+            <h2>The Bottle Trees and the Desert Rose</h2>
+            <p>If the Dragon's Blood Tree is Socotra's most famous resident, the bottle trees are its most eccentric. Adenium obesum socotranum, a subspecies of the desert rose found only on the island, has evolved a trunk so swollen and contorted that it resembles a modern sculpture more than a living organism. The trunk can reach diameters of over two meters, its surface wrinkled and twisted like the face of an ancient sage. From this improbable base, delicate pink and white flowers emerge, creating a contrast so striking that it seems deliberately designed to confuse the observer.</p>
+            <p>The bottle tree's swollen trunk is a water storage organ, an adaptation to the island's long dry seasons. During the brief rainy periods, the trunk absorbs water like a sponge, expanding visibly. During the dry months, it contracts, the wrinkles deepening as the stored moisture is slowly consumed. The tree is, in essence, a living canteen, carrying its own water supply through the desert months.</p>
+            <p>Other bottle trees populate the island, each with its own variation on the theme. Dendrosicyos socotranus, the cucumber tree, is the only member of the cucumber family to have evolved into a tree form. It stands up to six meters tall, its thick, water-storing trunk topped with a crown of lobed leaves that look more like they belong in a vegetable garden than on an alien island. The fruit, when it appears, is indeed a small cucumber, a reminder of the tree's humble family origins.</p>
+            <p>Then there are the frankincense trees, Boswellia socotrana, relatives of the more famous Boswellia sacra that grows on the Arabian mainland. These trees produce a resin that has been traded across the ancient world for thousands of years, carried by camel caravans along the incense routes that connected Arabia to the Mediterranean. The resin was worth its weight in gold, used in religious ceremonies, perfumes, and medicines. The island's name itself may derive from the Sanskrit word for "bliss," a reference to the aromatic substances that made Socotra famous in the ancient world.</p>
+            <p>Each of these plants tells a story of adaptation, of life finding a way in the most unlikely of circumstances. They are not merely survivors; they are innovators, pioneers of evolutionary strategies that have no parallel elsewhere on Earth. To walk among them is to walk through a museum of natural history that is still being written, a living laboratory where the experiments of deep time are visible in every trunk and leaf.</p>
+        </section>
+
+        <section class="chapter" data-chapter="4">
+            <p class="chapter-number">Chapter IV</p>
+            <h2>Isolation's End</h2>
+            <p>For most of its history, Socotra was protected by its remoteness. The island was known to ancient civilizations—the Egyptians, the Greeks, the Romans, the Arabs—but it was never colonized in the way that other lands were. Its people, a mixture of Arab, African, and South Asian ancestry, developed a unique culture adapted to the island's harsh environment. They built their houses from stone and thatch, cultivated terraced fields on the mountain slopes, and maintained a way of life that changed little over centuries.</p>
+            <p>The modern world, however, has finally found Socotra. The island became part of unified Yemen in 1990, and the political turmoil that has engulfed that country has not spared this remote outpost. In 2018, the United Arab Emirates established a military presence on the island, building an airbase and port facilities. Tourism, once a trickle of adventurous travelers, has been disrupted by the conflict. The island's unique ecosystem, which survived millions of years of natural change, now faces the far more rapid transformations wrought by human ambition.</p>
+            <p>The challenges are manifold. Overgrazing by livestock has degraded large areas of the island's vegetation. The introduction of non-native species threatens to disrupt the delicate ecological balance that has existed for millennia. Climate change is altering rainfall patterns and increasing the frequency of extreme weather events. And the political situation makes coordinated conservation efforts difficult, if not impossible.</p>
+            <p>And yet, there is hope. In 2008, Socotra was designated a UNESCO World Heritage Site, recognizing its outstanding universal value. Conservation organizations, both local and international, are working to protect the island's unique biodiversity. Ecotourism initiatives aim to provide sustainable livelihoods for local communities while preserving the natural environment. The people of Socotra themselves, who have lived in harmony with this landscape for generations, are increasingly recognized as the island's most important stewards.</p>
+            <p>The question is whether these efforts will be enough. Socotra has survived 30 million years of isolation, climate change, and geological upheaval. But the pace of modern change is unlike anything the island has faced before. In a few decades, humans have done what millions of years of natural processes could not: they have brought the outside world to Socotra's shores. The island's future now depends not on the slow workings of evolution, but on the choices of a single species—choices that are being made in distant capitals, in conference rooms, in moments of political calculation that have nothing to do with the Dragon's Blood Tree or the bottle tree or the ancient caves where the first Socotrans left their handprints on the stone.</p>
+        </section>
+
+        <div class="expedition-notes">
+            <h3>Expedition Notes</h3>
+            <ul>
+                <li>Socotra separated from the Arabian Peninsula 20–30 million years ago</li>
+                <li>37% of the island's 825 plant species are endemic</li>
+                <li>90% of reptile species are found nowhere else on Earth</li>
+                <li>Dracaena cinnabari (Dragon's Blood Tree) can live over 600 years</li>
+                <li>The island was designated a UNESCO World Heritage Site in 2008</li>
+                <li>Adenium obesum socotranum has a trunk exceeding 2 meters in diameter</li>
+                <li>The island's name may derive from the Sanskrit word for "bliss"</li>
+                <li>Over 250 coral species and 700 fish species inhabit surrounding waters</li>
+            </ul>
+        </div>
+
+        <div class="final-reflection">
+            <h3>Final Reflection</h3>
+            <p>Socotra teaches us that isolation is not a weakness but a strength. For 30 million years, this island has been a laboratory of evolution, a place where life has been free to experiment without the pressures of competition and predation that shape ecosystems on the mainland. The result is a world that looks like it belongs to another planet—a world of umbrella trees and swollen trunks and flowers that bloom from stone. But it is not another planet. It is our planet, and it is asking us a question: will we protect the places that make Earth extraordinary, or will we allow them to disappear into the homogenized landscape of the modern world? The answer, like the island itself, remains isolated—waiting for us to find it.</p>
+        </div>
+    </article>
+
+    <nav class="footer-nav">
+        <a href="expedition_001.html">← Previous</a>
+        <span class="current">Expedition 002 of 010</span>
+        <a href="expedition_003.html">Next Expedition →</a>
+    </nav>
+
+    <script>
+        const navbar = document.getElementById('navbar');
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 100) {
+                navbar.classList.add('scrolled');
+            } else {
+                navbar.classList.remove('scrolled');
+            }
+        });
+
+        const chapters = document.querySelectorAll('.chapter');
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, { threshold: 0.15 });
+
+        chapters.forEach(chapter => observer.observe(chapter));
+    </script>
+</body>
+</html>

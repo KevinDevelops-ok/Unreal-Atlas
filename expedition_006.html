@@ -1,0 +1,622 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Expedition 006 — Zhangjiajie | The Unreal Atlas</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Inter:wght@200;300;400;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --color-ink: #1a1a1a;
+            --color-ink-light: #4a4a4a;
+            --color-ink-muted: #7a7a7a;
+            --color-parchment: #f0f2ec;
+            --color-parchment-warm: #e5e8de;
+            --color-accent: #6b8f5a;
+            --color-accent-text: #59784b;
+            --color-mist: #9ab88a;
+            --font-serif: 'Cormorant Garamond', Georgia, serif;
+            --font-sans: 'Inter', -apple-system, sans-serif;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: var(--font-serif);
+            background: var(--color-parchment);
+            color: var(--color-ink);
+            line-height: 1.7;
+            overflow-x: hidden;
+        }
+
+        .hero {
+            position: relative;
+            height: 100vh;
+            min-height: 700px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            background: linear-gradient(180deg, #c8d4b8 0%, #b0c4a0 30%, #98b488 60%, #7a9a70 100%);
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: 
+                radial-gradient(ellipse at 50% 30%, rgba(255,255,255,0.3) 0%, transparent 50%),
+                radial-gradient(ellipse at 30% 70%, rgba(200,220,190,0.4) 0%, transparent 40%),
+                radial-gradient(ellipse at 70% 60%, rgba(180,200,170,0.3) 0%, transparent 45%);
+            z-index: 1;
+        }
+
+        .hero::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 50%;
+            background: linear-gradient(to top, var(--color-parchment) 0%, transparent 100%);
+            z-index: 2;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 10;
+            text-align: center;
+            padding: 2rem;
+        }
+
+        .expedition-number {
+            font-family: var(--font-sans);
+            font-size: 0.7rem;
+            font-weight: 300;
+            letter-spacing: 6px;
+            text-transform: uppercase;
+            color: rgba(255,255,255,0.6);
+            margin-bottom: 1.5rem;
+            opacity: 0;
+            animation: fadeInUp 1.2s ease 0.3s forwards;
+        }
+
+        .hero h1 {
+            font-size: clamp(2.5rem, 6vw, 5rem);
+            font-weight: 300;
+            letter-spacing: -1px;
+            line-height: 1.1;
+            margin-bottom: 1rem;
+            color: #f0f5e8;
+            opacity: 0;
+            animation: fadeInUp 1.2s ease 0.6s forwards;
+        }
+
+        .hero-subtitle {
+            font-size: clamp(1rem, 2vw, 1.4rem);
+            font-weight: 300;
+            font-style: italic;
+            color: rgba(240,245,232,0.8);
+            opacity: 0;
+            animation: fadeInUp 1.2s ease 0.9s forwards;
+        }
+
+        .hero-location {
+            font-family: var(--font-sans);
+            font-size: 0.75rem;
+            font-weight: 300;
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            color: rgba(240,245,232,0.5);
+            margin-top: 2rem;
+            opacity: 0;
+            animation: fadeInUp 1.2s ease 1.2s forwards;
+        }
+
+        .reading-time {
+            font-family: var(--font-sans);
+            font-size: 0.7rem;
+            font-weight: 300;
+            letter-spacing: 2px;
+            color: rgba(240,245,232,0.4);
+            margin-top: 0.5rem;
+            opacity: 0;
+            animation: fadeInUp 1.2s ease 1.4s forwards;
+        }
+
+        .scroll-indicator {
+            position: absolute;
+            bottom: 3rem;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 10;
+            opacity: 0;
+            animation: fadeInUp 1.2s ease 2s forwards;
+        }
+
+        .scroll-indicator span {
+            display: block;
+            width: 1px;
+            height: 40px;
+            background: rgba(240,245,232,0.4);
+            margin: 0 auto;
+            animation: scrollPulse 2s ease-in-out infinite;
+        }
+
+        .scroll-indicator p {
+            font-family: var(--font-sans);
+            font-size: 0.6rem;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            color: rgba(240,245,232,0.4);
+            margin-top: 0.5rem;
+        }
+
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes scrollPulse {
+            0%, 100% { opacity: 0.3; transform: scaleY(1); }
+            50% { opacity: 1; transform: scaleY(1.2); }
+        }
+
+        .nav-bar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 100;
+            padding: 1.5rem 3rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: transparent;
+            transition: background 0.4s ease, backdrop-filter 0.4s ease;
+        }
+
+        .nav-bar.scrolled {
+            background: rgba(240, 242, 236, 0.95);
+            backdrop-filter: blur(20px);
+            box-shadow: 0 1px 0 rgba(0,0,0,0.05);
+        }
+
+        .nav-bar.scrolled .nav-logo,
+        .nav-bar.scrolled .nav-links a { color: var(--color-ink); }
+
+        .nav-logo {
+            font-family: var(--font-serif);
+            font-size: 1.1rem;
+            font-weight: 400;
+            letter-spacing: 2px;
+            text-decoration: none;
+            color: #f0f5e8;
+            transition: color 0.4s ease;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+        }
+
+        .nav-links a {
+            font-family: var(--font-sans);
+            font-size: 0.7rem;
+            font-weight: 300;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            text-decoration: none;
+            color: rgba(240,245,232,0.7);
+            transition: color 0.3s ease;
+        }
+
+        .nav-links a:hover { color: #f0f5e8; }
+
+        .article-container {
+            max-width: 720px;
+            margin: 0 auto;
+            padding: 6rem 2rem;
+        }
+
+        .cinematic-opening {
+            font-size: 1.35rem;
+            font-weight: 300;
+            line-height: 1.9;
+            color: var(--color-ink-light);
+            margin-bottom: 4rem;
+            text-align: center;
+            font-style: italic;
+        }
+
+        .cinematic-opening::before {
+            content: '';
+            display: block;
+            width: 40px;
+            height: 1px;
+            background: var(--color-accent);
+            margin: 0 auto 2rem;
+        }
+
+        .chapter {
+            margin-bottom: 5rem;
+            opacity: 0;
+            transform: translateY(40px);
+            transition: opacity 0.8s ease, transform 0.8s ease;
+        }
+
+        .chapter.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .chapter-number {
+            font-family: var(--font-sans);
+            font-size: 0.65rem;
+            font-weight: 300;
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            color: var(--color-accent-text);
+            margin-bottom: 1rem;
+        }
+
+        .chapter h2 {
+            font-size: clamp(1.6rem, 3vw, 2.2rem);
+            font-weight: 400;
+            margin-bottom: 2rem;
+            line-height: 1.3;
+        }
+
+        .chapter p {
+            font-size: 1.1rem;
+            line-height: 1.9;
+            margin-bottom: 1.5rem;
+            color: var(--color-ink-light);
+        }
+
+        .chapter p:first-of-type::first-letter {
+            font-size: 3.5rem;
+            float: left;
+            line-height: 1;
+            padding-right: 0.5rem;
+            padding-top: 0.2rem;
+            font-weight: 400;
+            color: var(--color-ink);
+        }
+
+        .pull-quote {
+            margin: 3rem 0;
+            padding: 2rem 0;
+            border-top: 1px solid var(--color-accent);
+            border-bottom: 1px solid var(--color-accent);
+            text-align: center;
+        }
+
+        .pull-quote p {
+            font-size: 1.5rem;
+            font-style: italic;
+            font-weight: 300;
+            line-height: 1.6;
+            color: var(--color-ink);
+            margin: 0;
+        }
+
+        .pull-quote cite {
+            display: block;
+            font-family: var(--font-sans);
+            font-size: 0.7rem;
+            font-style: normal;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            color: var(--color-ink-muted);
+            margin-top: 1rem;
+        }
+
+        .expedition-notes {
+            background: var(--color-parchment-warm);
+            padding: 3rem;
+            margin: 4rem 0;
+            border-left: 3px solid var(--color-accent);
+        }
+
+        .expedition-notes h3 {
+            font-family: var(--font-sans);
+            font-size: 0.7rem;
+            font-weight: 400;
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            color: var(--color-accent-text);
+            margin-bottom: 1.5rem;
+        }
+
+        .expedition-notes ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .expedition-notes li {
+            font-family: var(--font-sans);
+            font-size: 0.85rem;
+            line-height: 2;
+            color: var(--color-ink-light);
+            padding-left: 1.5rem;
+            position: relative;
+        }
+
+        .expedition-notes li::before {
+            content: '—';
+            position: absolute;
+            left: 0;
+            color: var(--color-accent-text);
+        }
+
+        .final-reflection {
+            margin-top: 5rem;
+            padding-top: 3rem;
+            border-top: 1px solid rgba(0,0,0,0.1);
+        }
+
+        .final-reflection h3 {
+            font-family: var(--font-sans);
+            font-size: 0.7rem;
+            font-weight: 400;
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            color: var(--color-accent-text);
+            margin-bottom: 1.5rem;
+        }
+
+        .final-reflection p {
+            font-size: 1.2rem;
+            font-style: italic;
+            line-height: 2;
+            color: var(--color-ink-light);
+        }
+
+        .footer-nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 3rem;
+            border-top: 1px solid rgba(0,0,0,0.1);
+            max-width: 720px;
+            margin: 0 auto;
+        }
+
+        .footer-nav a {
+            font-family: var(--font-sans);
+            font-size: 0.75rem;
+            font-weight: 300;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            text-decoration: none;
+            color: var(--color-ink-light);
+            transition: color 0.3s ease;
+        }
+
+        .footer-nav a:hover { color: var(--color-ink); }
+
+        .footer-nav .current {
+            color: var(--color-accent-text);
+        }
+
+        @media (max-width: 768px) {
+            .nav-bar { padding: 1rem 1.5rem; }
+            .nav-links { gap: 1rem; }
+            .article-container { padding: 4rem 1.5rem; }
+            .expedition-notes { padding: 2rem 1.5rem; }
+            .chapter p:first-of-type::first-letter { font-size: 2.5rem; }
+        }
+    
+        /* ========================================================
+           POLISH — typography refinement, accessible focus states,
+           button / link micro-interactions, small editorial details
+           ======================================================== */
+
+        body {
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            text-rendering: optimizeLegibility;
+            font-variant-numeric: oldstyle-nums;
+        }
+
+        h1, h2, h3 { text-wrap: balance; }
+
+        p { text-wrap: pretty; orphans: 3; widows: 3; }
+
+        .pull-quote p, .cinematic-opening, .final-reflection p, .welcome-section p {
+            hanging-punctuation: first allow-end;
+        }
+
+        ::selection {
+            background: var(--color-accent);
+            color: var(--color-parchment, #faf8f5);
+        }
+
+        /* Keyboard focus states */
+        a:focus-visible,
+        .scroll-indicator:focus-visible,
+        .expedition-card:focus-visible {
+            outline: 1px solid var(--color-accent);
+            outline-offset: 4px;
+            border-radius: 1px;
+        }
+
+        /* Scroll indicator: now a real, clickable, focusable link */
+        .scroll-indicator {
+            text-decoration: none;
+            transition: opacity 0.3s ease;
+        }
+        .scroll-indicator:hover { opacity: 0.65 !important; }
+
+        /* Primary CTA */
+        .closing-cta {
+            cursor: pointer;
+            transition: background 0.3s ease, color 0.3s ease, letter-spacing 0.3s ease, box-shadow 0.3s ease, transform 0.15s ease;
+        }
+        .closing-cta:hover { letter-spacing: 5px; box-shadow: 0 10px 30px rgba(0,0,0,0.25); }
+        .closing-cta:active { transform: scale(0.97); }
+
+        /* Expedition cards */
+        .expedition-card { cursor: pointer; }
+        .expedition-card:active { transform: translateY(-1px) scale(0.995); }
+
+        /* Nav links: animated underline */
+        .nav-links a { position: relative; }
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            left: 0;
+            right: 100%;
+            bottom: -4px;
+            height: 1px;
+            background: currentColor;
+            transition: right 0.3s ease;
+        }
+        .nav-links a:hover::after { right: 0; }
+
+        /* Footer prev/next: directional nudge on hover */
+        .footer-nav a {
+            display: inline-block;
+            transition: color 0.3s ease, transform 0.3s ease;
+        }
+        .footer-nav a:first-child:hover { transform: translateX(-4px); }
+        .footer-nav a:last-child:hover { transform: translateX(4px); }
+
+        /* Respect reduced-motion preference */
+        @media (prefers-reduced-motion: reduce) {
+            *, *::before, *::after {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+                scroll-behavior: auto !important;
+            }
+        }
+
+    </style>
+</head>
+<body>
+    <nav class="nav-bar" id="navbar">
+        <a href="index.html" class="nav-logo">The Unreal Atlas</a>
+        <div class="nav-links">
+            <a href="index.html#expeditions">Expeditions</a>
+            <a href="index.html#about">About</a>
+        </div>
+    </nav>
+
+    <header class="hero">
+        <div class="hero-content">
+            <p class="expedition-number">Expedition 006</p>
+            <h1>Zhangjiajie National Forest</h1>
+            <p class="hero-subtitle">The Mountains That Learned to Touch the Sky</p>
+            <p class="hero-location">Hunan Province, China · Wulingyuan Scenic Area</p>
+            <p class="reading-time">Reading Time: 13 minutes</p>
+        </div>
+        <a href="#begin" class="scroll-indicator" aria-label="Scroll to begin reading">
+            <span></span>
+            <p>Begin</p>
+        </a>
+    </header>
+
+    <article class="article-container" id="begin">
+        <div class="cinematic-opening">
+            Imagine a forest where the trees are made of stone, where pillars of quartzite sandstone rise hundreds of meters into the sky like the columns of a temple built by giants, where mist drifts between the peaks like the breath of sleeping gods. This is not a dream. This is Zhangjiajie, and it is more extraordinary than any dream could be.
+        </div>
+
+        <section class="chapter" data-chapter="1">
+            <p class="chapter-number">Chapter I</p>
+            <h2>The Floating Mountains</h2>
+            <p>The first time you see them, you will not believe they are real. The pillars of Zhangjiajie rise from the forest floor with a verticality that defies the laws of geology as you understand them. They are not mountains in the conventional sense, with broad bases and sloping sides. They are columns, narrow at the base and wider at the top, their sides sheer and smooth, their summits often flat or rounded like the tops of mushrooms. Some are no wider than a house at their base, yet they rise 200 meters or more into the air, crowned with vegetation that seems to float above the surrounding forest.</p>
+            <p>There are more than 3,000 of these pillars in the Wulingyuan Scenic Area, which covers approximately 390 square kilometers in the northwest of Hunan Province. The tallest, the Avatar Hallelujah Mountain, reaches 1,080 meters above sea level. The pillars are composed primarily of quartzite sandstone, a rock that is both hard and resistant to erosion, which has allowed them to survive while the softer rock around them has been worn away. The result is a landscape that looks like it was designed for a fantasy film—which, in a sense, it was. James Cameron's 2009 film Avatar used the pillars of Zhangjiajie as the inspiration for the floating mountains of Pandora, and one of the pillars was officially renamed Avatar Hallelujah Mountain in 2010.</p>
+            <p>But the pillars are not a recent discovery. They have been part of Chinese cultural consciousness for centuries, appearing in traditional landscape paintings and poetry. The region was designated a UNESCO World Heritage Site in 1992, recognized for its outstanding natural beauty and its unique geological features. And yet, despite its fame, Zhangjiajie retains a quality of mystery, a sense that you are entering a world that operates by different rules than the one you left behind.</p>
+            <p>The geological story of the pillars begins approximately 380 million years ago, during the Devonian period, when this region was covered by a shallow sea. Sediments—sand, silt, and organic matter—accumulated on the seabed, eventually forming layers of sandstone and mudstone. Over millions of years, these sediments were buried, compacted, and cemented into rock. Tectonic forces then lifted the region, exposing the rock to the forces of erosion.</p>
+
+            <div class="pull-quote">
+                <p>"There are more than 3,000 of these pillars in the Wulingyuan Scenic Area, covering approximately 390 square kilometers."</p>
+                <cite>— UNESCO World Heritage Centre</cite>
+            </div>
+
+            <p>The erosion that created the pillars was not the work of water alone. It was a combination of physical weathering, chemical dissolution, and biological activity. The quartzite sandstone is crisscrossed by joints and fractures, weaknesses that water and ice have exploited over millions of years. Freeze-thaw cycles break the rock apart at the molecular level. Plant roots wedge themselves into cracks and pry them open. Rainwater, slightly acidic from dissolved carbon dioxide, dissolves the cementing minerals that hold the sand grains together. Slowly, inexorably, the rock is broken down, and the pillars emerge from the surrounding landscape like sculptures being revealed from a block of stone.</p>
+            <p>The process is still ongoing. Every year, the pillars lose a tiny fraction of their mass to erosion. Every century, some pillars collapse, their bases finally too weakened to support their weight. And every millennium, new pillars are born, as the forces of erosion continue their patient work. Zhangjiajie is not a static landscape. It is a process, a moment captured in the endless flow of geological time.</p>
+        </section>
+
+        <section class="chapter" data-chapter="2">
+            <p class="chapter-number">Chapter II</p>
+            <h2>The Sea of Clouds</h2>
+            <p>There is a phenomenon in Zhangjiajie that transforms the already extraordinary landscape into something that seems to belong to another realm entirely. It is called the sea of clouds, and it occurs when warm, moist air from the surrounding lowlands rises and meets the cooler air of the mountains. The moisture condenses into fog and low-lying clouds that fill the valleys between the pillars, creating the illusion that the stone columns are floating islands suspended above an ocean of white.</p>
+            <p>The effect is most dramatic in the early morning, when the rising sun illuminates the clouds from below, turning them into a sea of gold and rose. The pillars emerge from this ocean like the masts of sunken ships, their vegetation-darkened tops contrasting with the luminous mist below. From a vantage point on one of the higher peaks, you can look out across a landscape that seems to extend to infinity, a world of stone and cloud that has no visible connection to the earth below.</p>
+            <p>The sea of clouds is not merely beautiful; it is ecologically significant. The moisture that condenses in the fog provides a crucial water source for the plants that cling to the pillars' summits. Many of these plants are species that are found nowhere else, adapted to the unique microclimate of the pillar tops. The fog also creates a humid environment in the valleys, supporting a diverse forest ecosystem that includes rare and endangered species such as the Chinese giant salamander and the clouded leopard.</p>
+            <p>The clouds move constantly, shifting and swirling in response to the wind and the temperature gradients between the valleys and the peaks. A view that is clear one moment may be completely obscured the next, as a bank of fog rolls in and envelops the pillars in white silence. The unpredictability of the clouds adds to the sense of mystery that pervades the landscape. You cannot plan for the sea of clouds. You can only wait, and hope, and be grateful when it appears.</p>
+            <p>For the local Tujia people, who have lived in this region for centuries, the sea of clouds has spiritual significance. They believe that the pillars are the dwelling places of spirits, and that the clouds are the breath of these spirits, rising from their homes to mingle with the sky. The Tujia have a rich tradition of nature worship, and many of their rituals and festivals are connected to the landscape that surrounds them. They see Zhangjiajie not as a tourist attraction, but as a sacred place, a realm where the human and the divine intersect.</p>
+        </section>
+
+        <section class="chapter" data-chapter="3">
+            <p class="chapter-number">Chapter III</p>
+            <h2>The Glass Bridge</h2>
+            <p>In 2016, a new feature was added to the Zhangjiajie landscape: the Zhangjiajie Grand Canyon Glass Bridge, the longest and highest glass-bottomed bridge in the world. Spanning 430 meters across the canyon, suspended 300 meters above the ground, the bridge is an engineering marvel that offers visitors a view straight down into the abyss. It is also a source of controversy, a symbol of the tensions between preservation and development that characterize modern tourism.</p>
+            <p>The bridge was designed by Israeli architect Haim Dotan, who envisioned it as a "transparent wonder" that would allow visitors to experience the canyon without obscuring the view. The deck is made of 99 panels of triple-layered glass, each capable of supporting enormous weight. The bridge can hold up to 800 visitors at a time, and it has been tested with vehicles and even sledgehammers to demonstrate its strength. And yet, for many visitors, the experience of walking across it is terrifying. The glass is clear enough that you can see the canyon floor hundreds of meters below, and the sensation of walking on air is disorienting in the extreme.</p>
+            <p>The bridge is part of a broader development of the Zhangjiajie region that has transformed it from a remote wilderness into one of China's most popular tourist destinations. The park now receives millions of visitors each year, and the infrastructure has expanded accordingly. Cable cars carry visitors to the highest peaks. Glass elevators climb the faces of the tallest pillars. Walkways and viewing platforms have been constructed at strategic points, allowing visitors to experience the landscape without the physical exertion that was once required.</p>
+            <p>These developments have brought economic benefits to the region, creating jobs and raising living standards for local communities. But they have also raised concerns about the impact of mass tourism on a fragile ecosystem. The pillars are not indestructible; the increased foot traffic, the construction of infrastructure, and the sheer number of visitors all place stress on a landscape that has been shaped by millions of years of slow, patient erosion. The question is whether the beauty that draws the crowds can survive the crowds that it draws.</p>
+        </section>
+
+        <section class="chapter" data-chapter="4">
+            <p class="chapter-number">Chapter IV</p>
+            <h2>The Avatar Effect</h2>
+            <p>The connection between Zhangjiajie and James Cameron's Avatar has had a profound impact on the region's global profile. Before the film, Zhangjiajie was known primarily within China and among dedicated travelers. After the film, it became a destination for tourists from around the world, many of whom came specifically to see the landscape that had inspired Pandora's floating mountains. The renaming of the pillar was a savvy marketing move, but it also raised questions about the relationship between nature and culture, between authentic experience and mediated representation.</p>
+            <p>The Avatar Hallelujah Mountain is not the only pillar to have been renamed. Several others have been given names that reference the film or its characters, and the park has embraced its connection to Avatar as a central part of its identity. There are Avatar-themed attractions, Avatar-themed merchandise, and even Avatar-themed performances that recreate scenes from the film against the backdrop of the real landscape. It is a strange inversion: a real place that has become famous for its resemblance to a fictional place, which was itself inspired by the real place.</p>
+            <p>This circularity is not unique to Zhangjiajie. In an age of global media, the boundaries between the real and the fictional, the authentic and the constructed, have become increasingly blurred. Places that appear in films, television shows, and video games often become destinations in their own right, their meaning shaped as much by their media representation as by their physical reality. Zhangjiajie is a case study in this phenomenon, a place where the landscape itself has become a character in a story that is being told and retold by millions of people around the world.</p>
+            <p>But beneath the marketing and the media, the pillars remain what they have always been: stone, water, and time. They do not know about Avatar. They do not know about glass bridges or cable cars or the millions of visitors who come to photograph them. They simply stand, as they have stood for millions of years, rising from the forest in their impossible verticality, crowned with vegetation, wreathed in mist, waiting for the next rain, the next freeze, the next gust of wind that will carry them infinitesimally closer to the moment when they, too, will fall.</p>
+            <p>The Tujia people have a saying: "The mountains are old, but the clouds are young." It is a reminder that in a landscape measured in millions of years, human concerns are fleeting. The pillars of Zhangjiajie will outlast the films, the tourists, and perhaps even the human species itself. They are a monument to the patience of stone, a testament to the power of slow processes to create beauty that is beyond the scale of human ambition. And in their presence, we are reminded that we are not the authors of this world, but merely its readers, trying to understand a story that began long before we arrived and will continue long after we are gone.</p>
+        </section>
+
+        <div class="expedition-notes">
+            <h3>Expedition Notes</h3>
+            <ul>
+                <li>Over 3,000 quartzite sandstone pillars in the Wulingyuan Scenic Area</li>
+                <li>Area covers approximately 390 square kilometers</li>
+                <li>Tallest pillar (Avatar Hallelujah Mountain) reaches 1,080 meters</li>
+                <li>Rock formed during the Devonian period, ~380 million years ago</li>
+                <li>Designated a UNESCO World Heritage Site in 1992</li>
+                <li>Glass Bridge: 430m span, 300m above ground, opened 2016</li>
+                <li>Home to rare species including Chinese giant salamander</li>
+                <li>"Sea of clouds" phenomenon occurs when warm moist air meets cool mountain air</li>
+            </ul>
+        </div>
+
+        <div class="final-reflection">
+            <h3>Final Reflection</h3>
+            <p>Zhangjiajie is a landscape that humbles the human imagination. We can build glass bridges and cable cars, we can name peaks after movie characters, we can bring millions of visitors to marvel at the view. But we cannot create a pillar of stone that rises 200 meters from the forest floor. We cannot make a sea of clouds that turns valleys into oceans. We cannot speed up the processes of erosion that have shaped this landscape over millions of years. The pillars remind us that there are forces in the world that are older, stronger, and more patient than anything we can muster. And in that reminder, there is both humility and wonder. We are small, and the world is vast, and the mountains that learned to touch the sky will continue to reach upward long after we have returned to the earth from which they rose.</p>
+        </div>
+    </article>
+
+    <nav class="footer-nav">
+        <a href="expedition_005.html">← Previous</a>
+        <span class="current">Expedition 006 of 010</span>
+        <a href="expedition_007.html">Next Expedition →</a>
+    </nav>
+
+    <script>
+        const navbar = document.getElementById('navbar');
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 100) {
+                navbar.classList.add('scrolled');
+            } else {
+                navbar.classList.remove('scrolled');
+            }
+        });
+
+        const chapters = document.querySelectorAll('.chapter');
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, { threshold: 0.15 });
+
+        chapters.forEach(chapter => observer.observe(chapter));
+    </script>
+</body>
+</html>

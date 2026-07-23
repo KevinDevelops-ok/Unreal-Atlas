@@ -1,0 +1,859 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Unreal Atlas — A Cinematic Digital Journal</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Inter:wght@200;300;400;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --color-ink: #1a1a1a;
+            --color-ink-light: #4a4a4a;
+            --color-ink-muted: #7a7a7a;
+            --color-parchment: #faf8f5;
+            --color-parchment-warm: #f5f0e8;
+            --color-accent: #c4a882;
+            --color-accent-text: #816e55;
+            --font-serif: 'Cormorant Garamond', Georgia, serif;
+            --font-sans: 'Inter', -apple-system, sans-serif;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        html { scroll-behavior: smooth; }
+
+        body {
+            font-family: var(--font-serif);
+            background: var(--color-parchment);
+            color: var(--color-ink);
+            line-height: 1.7;
+            overflow-x: hidden;
+        }
+
+        /* ===== HERO SECTION ===== */
+        .hero {
+            position: relative;
+            height: 100vh;
+            min-height: 800px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            background: linear-gradient(180deg, #1a1a1a 0%, #2a2a2a 40%, #3a3a3a 70%, #4a4a4a 100%);
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: 
+                radial-gradient(ellipse at 30% 40%, rgba(196,168,130,0.08) 0%, transparent 50%),
+                radial-gradient(ellipse at 70% 60%, rgba(196,168,130,0.05) 0%, transparent 40%);
+            z-index: 1;
+        }
+
+        .hero::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 40%;
+            background: linear-gradient(to top, var(--color-parchment) 0%, transparent 100%);
+            z-index: 2;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 10;
+            text-align: center;
+            padding: 2rem;
+            max-width: 900px;
+        }
+
+        .hero-tagline {
+            font-family: var(--font-sans);
+            font-size: 0.65rem;
+            font-weight: 300;
+            letter-spacing: 8px;
+            text-transform: uppercase;
+            color: var(--color-accent);
+            margin-bottom: 2rem;
+            opacity: 0;
+            animation: fadeInUp 1.5s ease 0.3s forwards;
+        }
+
+        .hero h1 {
+            font-size: clamp(3rem, 8vw, 7rem);
+            font-weight: 300;
+            letter-spacing: -2px;
+            line-height: 1;
+            margin-bottom: 1.5rem;
+            color: #f5f0e8;
+            opacity: 0;
+            animation: fadeInUp 1.5s ease 0.6s forwards;
+        }
+
+        .hero-subtitle {
+            font-size: clamp(1.1rem, 2.5vw, 1.6rem);
+            font-weight: 300;
+            font-style: italic;
+            color: rgba(245,240,232,0.7);
+            margin-bottom: 3rem;
+            opacity: 0;
+            animation: fadeInUp 1.5s ease 0.9s forwards;
+        }
+
+        .hero-divider {
+            width: 60px;
+            height: 1px;
+            background: var(--color-accent);
+            margin: 0 auto 2rem;
+            opacity: 0;
+            animation: fadeInUp 1.5s ease 1.2s forwards;
+        }
+
+        .hero-intro {
+            font-size: 1.1rem;
+            font-weight: 300;
+            line-height: 2;
+            color: rgba(245,240,232,0.6);
+            max-width: 600px;
+            margin: 0 auto;
+            opacity: 0;
+            animation: fadeInUp 1.5s ease 1.5s forwards;
+        }
+
+        .scroll-indicator {
+            position: absolute;
+            bottom: 3rem;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 10;
+            opacity: 0;
+            animation: fadeInUp 1.5s ease 2.5s forwards;
+            cursor: pointer;
+            text-decoration: none;
+        }
+
+        .scroll-indicator span {
+            display: block;
+            width: 1px;
+            height: 50px;
+            background: var(--color-accent-text);
+            margin: 0 auto;
+            animation: scrollPulse 2s ease-in-out infinite;
+        }
+
+        .scroll-indicator p {
+            font-family: var(--font-sans);
+            font-size: 0.6rem;
+            font-weight: 500;
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            color: var(--color-accent-text);
+            margin-top: 0.8rem;
+        }
+
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(40px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes scrollPulse {
+            0%, 100% { opacity: 0.3; transform: scaleY(1); }
+            50% { opacity: 1; transform: scaleY(1.2); }
+        }
+
+        /* ===== NAVIGATION ===== */
+        .nav-bar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 100;
+            padding: 1.5rem 3rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: transparent;
+            transition: all 0.4s ease;
+        }
+
+        .nav-bar.scrolled {
+            background: rgba(250, 248, 245, 0.95);
+            backdrop-filter: blur(20px);
+            box-shadow: 0 1px 0 rgba(0,0,0,0.05);
+        }
+
+        .nav-bar.scrolled .nav-logo { color: var(--color-ink); }
+        .nav-bar.scrolled .nav-links a { color: var(--color-ink-light); }
+        .nav-bar.scrolled .nav-links a:hover { color: var(--color-ink); }
+
+        .nav-logo {
+            font-family: var(--font-serif);
+            font-size: 1.1rem;
+            font-weight: 400;
+            letter-spacing: 2px;
+            text-decoration: none;
+            color: #f5f0e8;
+            transition: color 0.4s ease;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2.5rem;
+        }
+
+        .nav-links a {
+            font-family: var(--font-sans);
+            font-size: 0.7rem;
+            font-weight: 300;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            text-decoration: none;
+            color: rgba(245,240,232,0.7);
+            transition: color 0.3s ease;
+        }
+
+        .nav-links a:hover { color: #f5f0e8; }
+
+        /* ===== SECTION STYLES ===== */
+        .section {
+            padding: 8rem 2rem;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .section-label {
+            font-family: var(--font-sans);
+            font-size: 0.65rem;
+            font-weight: 300;
+            letter-spacing: 6px;
+            text-transform: uppercase;
+            color: var(--color-accent-text);
+            margin-bottom: 1.5rem;
+        }
+
+        .section h2 {
+            font-size: clamp(2rem, 4vw, 3rem);
+            font-weight: 300;
+            margin-bottom: 2rem;
+            line-height: 1.2;
+        }
+
+        .section p {
+            font-size: 1.15rem;
+            line-height: 2;
+            color: var(--color-ink-light);
+            margin-bottom: 1.5rem;
+        }
+
+        /* ===== WELCOME INTRODUCTION ===== */
+        .welcome-section {
+            text-align: center;
+            padding: 10rem 2rem;
+        }
+
+        .welcome-section p {
+            font-size: 1.35rem;
+            font-style: italic;
+            line-height: 2;
+            color: var(--color-ink-light);
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        .welcome-section p::before {
+            content: '';
+            display: block;
+            width: 40px;
+            height: 1px;
+            background: var(--color-accent);
+            margin: 0 auto 2.5rem;
+        }
+
+        /* ===== ABOUT SECTION ===== */
+        .about-section {
+            background: var(--color-parchment-warm);
+            padding: 8rem 2rem;
+        }
+
+        .about-section .section {
+            max-width: 800px;
+        }
+
+        /* ===== WHY THIS JOURNAL ===== */
+        .why-section {
+            padding: 8rem 2rem;
+        }
+
+        .why-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 3rem;
+            margin-top: 4rem;
+        }
+
+        .why-item {
+            text-align: center;
+        }
+
+        .why-item-number {
+            font-family: var(--font-serif);
+            font-size: 3rem;
+            font-weight: 300;
+            color: var(--color-accent-text);
+            margin-bottom: 1rem;
+            opacity: 0.5;
+        }
+
+        .why-item h3 {
+            font-size: 1.2rem;
+            font-weight: 400;
+            margin-bottom: 1rem;
+        }
+
+        .why-item p {
+            font-family: var(--font-sans);
+            font-size: 0.9rem;
+            line-height: 1.8;
+            color: var(--color-ink-muted);
+        }
+
+        /* ===== EARTH'S GREATEST ILLUSIONIST ===== */
+        .illusionist-section {
+            background: var(--color-ink);
+            color: var(--color-parchment);
+            padding: 10rem 2rem;
+            text-align: center;
+        }
+
+        .illusionist-section .section-label {
+            color: var(--color-accent);
+        }
+
+        .illusionist-section h2 {
+            color: var(--color-parchment);
+            margin-bottom: 2.5rem;
+        }
+
+        .illusionist-section p {
+            color: rgba(250,248,245,0.7);
+            max-width: 700px;
+            margin: 0 auto 1.5rem;
+        }
+
+        /* ===== EXPEDITIONS GRID ===== */
+        .expeditions-section {
+            padding: 8rem 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .expeditions-header {
+            text-align: center;
+            margin-bottom: 5rem;
+        }
+
+        .expeditions-header h2 {
+            font-size: clamp(2rem, 4vw, 3rem);
+            font-weight: 300;
+            margin-bottom: 1rem;
+        }
+
+        .expeditions-header p {
+            font-size: 1.1rem;
+            color: var(--color-ink-muted);
+            font-style: italic;
+        }
+
+        .expeditions-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 2rem;
+        }
+
+        .expedition-card {
+            display: block;
+            text-decoration: none;
+            color: inherit;
+            background: white;
+            border: 1px solid rgba(0,0,0,0.06);
+            padding: 2.5rem;
+            transition: transform 0.4s ease, box-shadow 0.4s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .expedition-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: var(--card-color, var(--color-accent));
+            transform: scaleX(0);
+            transform-origin: left;
+            transition: transform 0.4s ease;
+        }
+
+        .expedition-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.08);
+        }
+
+        .expedition-card:hover::before {
+            transform: scaleX(1);
+        }
+
+        .expedition-card-number {
+            font-family: var(--font-sans);
+            font-size: 0.6rem;
+            font-weight: 300;
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            color: var(--color-ink-muted);
+            margin-bottom: 1rem;
+        }
+
+        .expedition-card h3 {
+            font-size: 1.6rem;
+            font-weight: 400;
+            margin-bottom: 0.5rem;
+            line-height: 1.2;
+        }
+
+        .expedition-card-subtitle {
+            font-size: 1rem;
+            font-style: italic;
+            color: var(--color-ink-muted);
+            margin-bottom: 1.5rem;
+        }
+
+        .expedition-card-location {
+            font-family: var(--font-sans);
+            font-size: 0.75rem;
+            font-weight: 300;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            color: var(--color-ink-muted);
+        }
+
+        .expedition-card-atmosphere {
+            font-family: var(--font-sans);
+            font-size: 0.7rem;
+            font-weight: 300;
+            letter-spacing: 1px;
+            color: var(--color-accent-text);
+            margin-top: 1.5rem;
+            font-style: italic;
+        }
+
+        /* Card accent colors */
+        .card-001 { --card-color: #8fb8d4; }
+        .card-002 { --card-color: #6b8e5a; }
+        .card-003 { --card-color: #7a9e8e; }
+        .card-004 { --card-color: #8b4545; }
+        .card-005 { --card-color: #c4845a; }
+        .card-006 { --card-color: #6b8f5a; }
+        .card-007 { --card-color: #c4788a; }
+        .card-008 { --card-color: #5a8a9a; }
+        .card-009 { --card-color: #8a6a4a; }
+        .card-010 { --card-color: #6a5a4a; }
+
+        /* ===== CLOSING CALL TO ADVENTURE ===== */
+        .closing-section {
+            background: var(--color-ink);
+            color: var(--color-parchment);
+            padding: 10rem 2rem;
+            text-align: center;
+        }
+
+        .closing-section h2 {
+            font-size: clamp(2rem, 4vw, 3.5rem);
+            font-weight: 300;
+            color: var(--color-parchment);
+            margin-bottom: 2rem;
+        }
+
+        .closing-section p {
+            font-size: 1.2rem;
+            font-style: italic;
+            line-height: 2;
+            color: rgba(250,248,245,0.7);
+            max-width: 600px;
+            margin: 0 auto 3rem;
+        }
+
+        .closing-cta {
+            display: inline-block;
+            font-family: var(--font-sans);
+            font-size: 0.75rem;
+            font-weight: 300;
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            text-decoration: none;
+            color: var(--color-accent);
+            border: 1px solid var(--color-accent);
+            padding: 1rem 2.5rem;
+            transition: all 0.3s ease;
+        }
+
+        .closing-cta:hover {
+            background: var(--color-accent);
+            color: var(--color-ink);
+        }
+
+        /* ===== FOOTER ===== */
+        .footer {
+            padding: 4rem 2rem;
+            text-align: center;
+            border-top: 1px solid rgba(0,0,0,0.08);
+        }
+
+        .footer p {
+            font-family: var(--font-sans);
+            font-size: 0.75rem;
+            color: var(--color-ink-muted);
+            letter-spacing: 2px;
+        }
+
+        .footer-brand {
+            font-family: var(--font-serif);
+            font-size: 1.2rem;
+            letter-spacing: 3px;
+            color: var(--color-ink);
+            margin-bottom: 1rem;
+        }
+
+        /* ===== REVEAL ANIMATIONS ===== */
+        .reveal {
+            opacity: 0;
+            transform: translateY(40px);
+            transition: opacity 0.8s ease, transform 0.8s ease;
+        }
+
+        .reveal.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* ===== RESPONSIVE ===== */
+        @media (max-width: 768px) {
+            .nav-bar { padding: 1rem 1.5rem; }
+            .nav-links { gap: 1.5rem; }
+            .section { padding: 5rem 1.5rem; }
+            .welcome-section { padding: 6rem 1.5rem; }
+            .expeditions-grid { grid-template-columns: 1fr; }
+            .why-grid { grid-template-columns: 1fr; gap: 2rem; }
+        }
+    
+        /* ========================================================
+           POLISH — typography refinement, accessible focus states,
+           button / link micro-interactions, small editorial details
+           ======================================================== */
+
+        body {
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            text-rendering: optimizeLegibility;
+            font-variant-numeric: oldstyle-nums;
+        }
+
+        h1, h2, h3 { text-wrap: balance; }
+
+        p { text-wrap: pretty; orphans: 3; widows: 3; }
+
+        .pull-quote p, .cinematic-opening, .final-reflection p, .welcome-section p {
+            hanging-punctuation: first allow-end;
+        }
+
+        ::selection {
+            background: var(--color-accent);
+            color: var(--color-parchment, #faf8f5);
+        }
+
+        /* Keyboard focus states */
+        a:focus-visible,
+        .scroll-indicator:focus-visible,
+        .expedition-card:focus-visible {
+            outline: 1px solid var(--color-accent);
+            outline-offset: 4px;
+            border-radius: 1px;
+        }
+
+        /* Scroll indicator: now a real, clickable, focusable link */
+        .scroll-indicator {
+            text-decoration: none;
+            transition: opacity 0.3s ease;
+        }
+        .scroll-indicator:hover { opacity: 0.65 !important; }
+
+        /* Primary CTA */
+        .closing-cta {
+            cursor: pointer;
+            transition: background 0.3s ease, color 0.3s ease, letter-spacing 0.3s ease, box-shadow 0.3s ease, transform 0.15s ease;
+        }
+        .closing-cta:hover { letter-spacing: 5px; box-shadow: 0 10px 30px rgba(0,0,0,0.25); }
+        .closing-cta:active { transform: scale(0.97); }
+
+        /* Expedition cards */
+        .expedition-card { cursor: pointer; }
+        .expedition-card:active { transform: translateY(-1px) scale(0.995); }
+
+        /* Nav links: animated underline */
+        .nav-links a { position: relative; }
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            left: 0;
+            right: 100%;
+            bottom: -4px;
+            height: 1px;
+            background: currentColor;
+            transition: right 0.3s ease;
+        }
+        .nav-links a:hover::after { right: 0; }
+
+        /* Footer prev/next: directional nudge on hover */
+        .footer-nav a {
+            display: inline-block;
+            transition: color 0.3s ease, transform 0.3s ease;
+        }
+        .footer-nav a:first-child:hover { transform: translateX(-4px); }
+        .footer-nav a:last-child:hover { transform: translateX(4px); }
+
+        /* Respect reduced-motion preference */
+        @media (prefers-reduced-motion: reduce) {
+            *, *::before, *::after {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+                scroll-behavior: auto !important;
+            }
+        }
+
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="nav-bar" id="navbar">
+        <a href="index.html" class="nav-logo">The Unreal Atlas</a>
+        <div class="nav-links">
+            <a href="#expeditions">Expeditions</a>
+            <a href="#about">About</a>
+            <a href="#why">Why</a>
+        </div>
+    </nav>
+
+    <!-- Hero -->
+    <header class="hero">
+        <div class="hero-content">
+            <p class="hero-tagline">A Cinematic Digital Journal</p>
+            <h1>The Unreal Atlas</h1>
+            <p class="hero-subtitle">Exploring the Most Surreal Real-World Places on Earth</p>
+            <div class="hero-divider"></div>
+            <p class="hero-intro">Ten expeditions into landscapes that challenge belief. Ten places where nature has outdone imagination. Ten stories that will make you question what you thought you knew about the world.</p>
+        </div>
+        <a href="#welcome" class="scroll-indicator">
+            <span></span>
+            <p>Enter</p>
+        </a>
+    </header>
+
+    <!-- Welcome Introduction -->
+    <section class="welcome-section" id="welcome">
+        <p>Welcome to a journal that does not ask you to travel. It asks you to see. Each expedition within these pages is a journey into a place that seems impossible—until you learn that it is real. The writing is immersive, the science is accurate, and the wonder is genuine. This is not a travel guide. It is an act of witnessing.</p>
+    </section>
+
+    <!-- About The Unreal Atlas -->
+    <section class="about-section" id="about">
+        <div class="section reveal">
+            <p class="section-label">About</p>
+            <h2>The Unreal Atlas</h2>
+            <p>This journal was born from a simple observation: the most extraordinary places on Earth are often the ones we know the least about. Not because they are hidden, but because we have stopped looking. We have become accustomed to a world that has been photographed from every angle, mapped to the last meter, and explained by every expert. And yet, the world remains full of mystery.</p>
+            <p>The Unreal Atlas is an attempt to recover that sense of mystery. Each expedition is a deep dive into a single place, exploring its geology, its biology, its history, and its meaning. The writing is immersive and cinematic, designed to transport you to these places without leaving your chair. The facts are rigorously researched, drawn from scientific literature, historical records, and firsthand accounts. The tone is respectful, curious, and awestruck.</p>
+            <p>We do not invent. We do not exaggerate. We do not sell. We simply observe, describe, and reflect. The places in this journal need no embellishment. They are extraordinary enough as they are.</p>
+        </div>
+    </section>
+
+    <!-- Why This Journal Exists -->
+    <section class="why-section" id="why">
+        <div class="section reveal">
+            <p class="section-label">Purpose</p>
+            <h2>Why This Journal Exists</h2>
+            <p>In an age of infinite information, wonder has become scarce. We scroll past images of extraordinary places without pausing to understand what makes them extraordinary. We collect destinations like stamps, ticking boxes without absorbing meaning. The Unreal Atlas exists to slow things down. To make you stop. To make you look. To make you feel something.</p>
+
+            <div class="why-grid">
+                <div class="why-item">
+                    <div class="why-item-number">01</div>
+                    <h3>Wonder</h3>
+                    <p>To rekindle the sense of awe that comes from encountering something genuinely extraordinary. Not the awe of spectacle, but the awe of understanding.</p>
+                </div>
+                <div class="why-item">
+                    <div class="why-item-number">02</div>
+                    <h3>Curiosity</h3>
+                    <p>To inspire deeper inquiry. Every place in this journal raises questions that lead to more questions, creating a chain of curiosity that has no end.</p>
+                </div>
+                <div class="why-item">
+                    <div class="why-item-number">03</div>
+                    <h3>Education</h3>
+                    <p>To teach through storytelling. Scientific accuracy matters, but so does the emotional connection that makes knowledge memorable.</p>
+                </div>
+                <div class="why-item">
+                    <div class="why-item-number">04</div>
+                    <h3>Preservation</h3>
+                    <p>To foster a sense of stewardship. The places in this journal are fragile. Understanding them is the first step toward protecting them.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Earth's Greatest Illusionist -->
+    <section class="illusionist-section">
+        <div class="section reveal">
+            <p class="section-label">The Artist</p>
+            <h2>Earth's Greatest Illusionist</h2>
+            <p>Nature does not set out to create beauty. It sets out to create function. The hexagonal columns of Giant's Causeway are a solution to a cooling problem. The pink water of Lake Hillier is a byproduct of microbial survival. The mirror of Salar de Uyuni is the residue of an evaporated lake. And yet, in solving these problems, nature has created beauty that surpasses anything humans have designed.</p>
+            <p>This is the central paradox of the natural world: that the most beautiful things are often the most utilitarian. The glowworms of Waitomo do not glow to delight tourists; they glow to catch prey. The pillars of Zhangjiajie were not carved to inspire filmmakers; they were eroded by water and wind. The blood-red flow from Taylor Glacier is not a deliberate aesthetic choice; it is the oxidation of dissolved iron.</p>
+            <p>And yet, the beauty is real. The wonder is real. The sense of encountering something that transcends ordinary experience is real. Nature is the greatest illusionist because it creates the illusion of design without a designer, of purpose without intention, of art without an artist. The places in this journal are its masterpieces.</p>
+        </div>
+    </section>
+
+    <!-- Preview of All Expeditions -->
+    <section class="expeditions-section" id="expeditions">
+        <div class="expeditions-header reveal">
+            <p class="section-label">The Collection</p>
+            <h2>Ten Expeditions</h2>
+            <p>Each journey is a world unto itself. Choose your path.</p>
+        </div>
+
+        <div class="expeditions-grid">
+            <a href="expedition_001.html" class="expedition-card card-001">
+                <div class="expedition-card-number">Expedition 001</div>
+                <h3>Salar de Uyuni</h3>
+                <p class="expedition-card-subtitle">Where Earth Reflects the Sky</p>
+                <p class="expedition-card-location">Potosí Department, Bolivia</p>
+                <p class="expedition-card-atmosphere">Calm, reflective, infinite</p>
+            </a>
+
+            <a href="expedition_002.html" class="expedition-card card-002">
+                <div class="expedition-card-number">Expedition 002</div>
+                <h3>Socotra Island</h3>
+                <p class="expedition-card-subtitle">The Island Evolution Forgot</p>
+                <p class="expedition-card-location">Arabian Sea, Yemen</p>
+                <p class="expedition-card-atmosphere">Alien, evolutionary, mysterious</p>
+            </a>
+
+            <a href="expedition_003.html" class="expedition-card card-003">
+                <div class="expedition-card-number">Expedition 003</div>
+                <h3>Waitomo Glowworm Caves</h3>
+                <p class="expedition-card-subtitle">A Sky Hidden Beneath the Earth</p>
+                <p class="expedition-card-location">North Island, New Zealand</p>
+                <p class="expedition-card-atmosphere">Quiet, magical, underground</p>
+            </a>
+
+            <a href="expedition_004.html" class="expedition-card card-004">
+                <div class="expedition-card-number">Expedition 004</div>
+                <h3>Blood Falls</h3>
+                <p class="expedition-card-subtitle">The Glacier That Appears to Bleed</p>
+                <p class="expedition-card-location">Taylor Valley, Antarctica</p>
+                <p class="expedition-card-atmosphere">Scientific mystery</p>
+            </a>
+
+            <a href="expedition_005.html" class="expedition-card card-005">
+                <div class="expedition-card-number">Expedition 005</div>
+                <h3>Antelope Canyon</h3>
+                <p class="expedition-card-subtitle">Where Sunlight Becomes Art</p>
+                <p class="expedition-card-location">Page, Arizona, USA</p>
+                <p class="expedition-card-atmosphere">Warm, artistic, flowing</p>
+            </a>
+
+            <a href="expedition_006.html" class="expedition-card card-006">
+                <div class="expedition-card-number">Expedition 006</div>
+                <h3>Zhangjiajie National Forest</h3>
+                <p class="expedition-card-subtitle">The Mountains That Learned to Touch the Sky</p>
+                <p class="expedition-card-location">Hunan Province, China</p>
+                <p class="expedition-card-atmosphere">Epic, dreamlike</p>
+            </a>
+
+            <a href="expedition_007.html" class="expedition-card card-007">
+                <div class="expedition-card-number">Expedition 007</div>
+                <h3>Lake Hillier</h3>
+                <p class="expedition-card-subtitle">The Lake That Chose Pink</p>
+                <p class="expedition-card-location">Middle Island, Western Australia</p>
+                <p class="expedition-card-atmosphere">Curious, colorful, surprising</p>
+            </a>
+
+            <a href="expedition_008.html" class="expedition-card card-008">
+                <div class="expedition-card-number">Expedition 008</div>
+                <h3>Marble Caves</h3>
+                <p class="expedition-card-subtitle">Cathedrals Carved by Water</p>
+                <p class="expedition-card-location">General Carrera Lake, Patagonia</p>
+                <p class="expedition-card-atmosphere">Elegant, peaceful</p>
+            </a>
+
+            <a href="expedition_009.html" class="expedition-card card-009">
+                <div class="expedition-card-number">Expedition 009</div>
+                <h3>Iceland Highlands</h3>
+                <p class="expedition-card-subtitle">Where Fire Meets Ice</p>
+                <p class="expedition-card-location">Central Iceland</p>
+                <p class="expedition-card-atmosphere">Powerful, raw, cinematic</p>
+            </a>
+
+            <a href="expedition_010.html" class="expedition-card card-010">
+                <div class="expedition-card-number">Expedition 010</div>
+                <h3>Giant's Causeway</h3>
+                <p class="expedition-card-subtitle">The Stairway Built by Giants</p>
+                <p class="expedition-card-location">County Antrim, Northern Ireland</p>
+                <p class="expedition-card-atmosphere">Mythical, legendary, inspiring</p>
+            </a>
+        </div>
+    </section>
+
+    <!-- Closing Call to Adventure -->
+    <section class="closing-section">
+        <div class="reveal">
+            <p class="section-label">The Invitation</p>
+            <h2>The World Awaits</h2>
+            <p>You do not need a plane ticket to begin. You do not need a guidebook or a backpack or a reservation. You need only curiosity, patience, and the willingness to be surprised. The places in this journal are real. They exist right now, as you read these words, going about their business of being extraordinary while the rest of the world rushes past.</p>
+            <p>Turn the page. Choose an expedition. Let the Earth show you what it has made.</p>
+            <a href="#expeditions" class="closing-cta">Begin the Journey</a>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <p class="footer-brand">The Unreal Atlas</p>
+        <p>A Cinematic Digital Journal · 2026</p>
+    </footer>
+
+    <script>
+        // Navbar scroll effect
+        const navbar = document.getElementById('navbar');
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 100) {
+                navbar.classList.add('scrolled');
+            } else {
+                navbar.classList.remove('scrolled');
+            }
+        });
+
+        // Reveal animations
+        const reveals = document.querySelectorAll('.reveal');
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, { threshold: 0.1 });
+
+        reveals.forEach(el => observer.observe(el));
+    </script>
+</body>
+</html>

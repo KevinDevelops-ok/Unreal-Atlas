@@ -1,0 +1,621 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Expedition 010 — Giant's Causeway | The Unreal Atlas</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Inter:wght@200;300;400;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --color-ink: #1a1a1a;
+            --color-ink-light: #4a4a4a;
+            --color-ink-muted: #7a7a7a;
+            --color-parchment: #f5f4f0;
+            --color-parchment-warm: #ebe9e2;
+            --color-accent: #6a5a4a;
+            --color-accent-text: #6a5a4a;
+            --color-stone: #8a7a6a;
+            --font-serif: 'Cormorant Garamond', Georgia, serif;
+            --font-sans: 'Inter', -apple-system, sans-serif;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: var(--font-serif);
+            background: var(--color-parchment);
+            color: var(--color-ink);
+            line-height: 1.7;
+            overflow-x: hidden;
+        }
+
+        .hero {
+            position: relative;
+            height: 100vh;
+            min-height: 700px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            background: linear-gradient(180deg, #5a5048 0%, #6a6058 30%, #7a7068 60%, #8a8078 100%);
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: 
+                radial-gradient(ellipse at 50% 50%, rgba(180,170,160,0.3) 0%, transparent 60%),
+                radial-gradient(ellipse at 30% 70%, rgba(160,150,140,0.2) 0%, transparent 40%);
+            z-index: 1;
+        }
+
+        .hero::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 50%;
+            background: linear-gradient(to top, var(--color-parchment) 0%, transparent 100%);
+            z-index: 2;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 10;
+            text-align: center;
+            padding: 2rem;
+        }
+
+        .expedition-number {
+            font-family: var(--font-sans);
+            font-size: 0.7rem;
+            font-weight: 300;
+            letter-spacing: 6px;
+            text-transform: uppercase;
+            color: rgba(255,255,255,0.6);
+            margin-bottom: 1.5rem;
+            opacity: 0;
+            animation: fadeInUp 1.2s ease 0.3s forwards;
+        }
+
+        .hero h1 {
+            font-size: clamp(2.5rem, 6vw, 5rem);
+            font-weight: 300;
+            letter-spacing: -1px;
+            line-height: 1.1;
+            margin-bottom: 1rem;
+            color: #f0ece5;
+            opacity: 0;
+            animation: fadeInUp 1.2s ease 0.6s forwards;
+        }
+
+        .hero-subtitle {
+            font-size: clamp(1rem, 2vw, 1.4rem);
+            font-weight: 300;
+            font-style: italic;
+            color: rgba(240,236,229,0.85);
+            opacity: 0;
+            animation: fadeInUp 1.2s ease 0.9s forwards;
+        }
+
+        .hero-location {
+            font-family: var(--font-sans);
+            font-size: 0.75rem;
+            font-weight: 300;
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            color: rgba(240,236,229,0.5);
+            margin-top: 2rem;
+            opacity: 0;
+            animation: fadeInUp 1.2s ease 1.2s forwards;
+        }
+
+        .reading-time {
+            font-family: var(--font-sans);
+            font-size: 0.7rem;
+            font-weight: 300;
+            letter-spacing: 2px;
+            color: rgba(240,236,229,0.4);
+            margin-top: 0.5rem;
+            opacity: 0;
+            animation: fadeInUp 1.2s ease 1.4s forwards;
+        }
+
+        .scroll-indicator {
+            position: absolute;
+            bottom: 3rem;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 10;
+            opacity: 0;
+            animation: fadeInUp 1.2s ease 2s forwards;
+        }
+
+        .scroll-indicator span {
+            display: block;
+            width: 1px;
+            height: 40px;
+            background: rgba(240,236,229,0.4);
+            margin: 0 auto;
+            animation: scrollPulse 2s ease-in-out infinite;
+        }
+
+        .scroll-indicator p {
+            font-family: var(--font-sans);
+            font-size: 0.6rem;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            color: rgba(240,236,229,0.4);
+            margin-top: 0.5rem;
+        }
+
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes scrollPulse {
+            0%, 100% { opacity: 0.3; transform: scaleY(1); }
+            50% { opacity: 1; transform: scaleY(1.2); }
+        }
+
+        .nav-bar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 100;
+            padding: 1.5rem 3rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: transparent;
+            transition: background 0.4s ease, backdrop-filter 0.4s ease;
+        }
+
+        .nav-bar.scrolled {
+            background: rgba(245, 244, 240, 0.95);
+            backdrop-filter: blur(20px);
+            box-shadow: 0 1px 0 rgba(0,0,0,0.05);
+        }
+
+        .nav-bar.scrolled .nav-logo,
+        .nav-bar.scrolled .nav-links a { color: var(--color-ink); }
+
+        .nav-logo {
+            font-family: var(--font-serif);
+            font-size: 1.1rem;
+            font-weight: 400;
+            letter-spacing: 2px;
+            text-decoration: none;
+            color: #f0ece5;
+            transition: color 0.4s ease;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+        }
+
+        .nav-links a {
+            font-family: var(--font-sans);
+            font-size: 0.7rem;
+            font-weight: 300;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            text-decoration: none;
+            color: rgba(240,236,229,0.7);
+            transition: color 0.3s ease;
+        }
+
+        .nav-links a:hover { color: #f0ece5; }
+
+        .article-container {
+            max-width: 720px;
+            margin: 0 auto;
+            padding: 6rem 2rem;
+        }
+
+        .cinematic-opening {
+            font-size: 1.35rem;
+            font-weight: 300;
+            line-height: 1.9;
+            color: var(--color-ink-light);
+            margin-bottom: 4rem;
+            text-align: center;
+            font-style: italic;
+        }
+
+        .cinematic-opening::before {
+            content: '';
+            display: block;
+            width: 40px;
+            height: 1px;
+            background: var(--color-accent);
+            margin: 0 auto 2rem;
+        }
+
+        .chapter {
+            margin-bottom: 5rem;
+            opacity: 0;
+            transform: translateY(40px);
+            transition: opacity 0.8s ease, transform 0.8s ease;
+        }
+
+        .chapter.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .chapter-number {
+            font-family: var(--font-sans);
+            font-size: 0.65rem;
+            font-weight: 300;
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            color: var(--color-accent-text);
+            margin-bottom: 1rem;
+        }
+
+        .chapter h2 {
+            font-size: clamp(1.6rem, 3vw, 2.2rem);
+            font-weight: 400;
+            margin-bottom: 2rem;
+            line-height: 1.3;
+        }
+
+        .chapter p {
+            font-size: 1.1rem;
+            line-height: 1.9;
+            margin-bottom: 1.5rem;
+            color: var(--color-ink-light);
+        }
+
+        .chapter p:first-of-type::first-letter {
+            font-size: 3.5rem;
+            float: left;
+            line-height: 1;
+            padding-right: 0.5rem;
+            padding-top: 0.2rem;
+            font-weight: 400;
+            color: var(--color-ink);
+        }
+
+        .pull-quote {
+            margin: 3rem 0;
+            padding: 2rem 0;
+            border-top: 1px solid var(--color-accent);
+            border-bottom: 1px solid var(--color-accent);
+            text-align: center;
+        }
+
+        .pull-quote p {
+            font-size: 1.5rem;
+            font-style: italic;
+            font-weight: 300;
+            line-height: 1.6;
+            color: var(--color-ink);
+            margin: 0;
+        }
+
+        .pull-quote cite {
+            display: block;
+            font-family: var(--font-sans);
+            font-size: 0.7rem;
+            font-style: normal;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            color: var(--color-ink-muted);
+            margin-top: 1rem;
+        }
+
+        .expedition-notes {
+            background: var(--color-parchment-warm);
+            padding: 3rem;
+            margin: 4rem 0;
+            border-left: 3px solid var(--color-accent);
+        }
+
+        .expedition-notes h3 {
+            font-family: var(--font-sans);
+            font-size: 0.7rem;
+            font-weight: 400;
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            color: var(--color-accent-text);
+            margin-bottom: 1.5rem;
+        }
+
+        .expedition-notes ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .expedition-notes li {
+            font-family: var(--font-sans);
+            font-size: 0.85rem;
+            line-height: 2;
+            color: var(--color-ink-light);
+            padding-left: 1.5rem;
+            position: relative;
+        }
+
+        .expedition-notes li::before {
+            content: '—';
+            position: absolute;
+            left: 0;
+            color: var(--color-accent-text);
+        }
+
+        .final-reflection {
+            margin-top: 5rem;
+            padding-top: 3rem;
+            border-top: 1px solid rgba(0,0,0,0.1);
+        }
+
+        .final-reflection h3 {
+            font-family: var(--font-sans);
+            font-size: 0.7rem;
+            font-weight: 400;
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            color: var(--color-accent-text);
+            margin-bottom: 1.5rem;
+        }
+
+        .final-reflection p {
+            font-size: 1.2rem;
+            font-style: italic;
+            line-height: 2;
+            color: var(--color-ink-light);
+        }
+
+        .footer-nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 3rem;
+            border-top: 1px solid rgba(0,0,0,0.1);
+            max-width: 720px;
+            margin: 0 auto;
+        }
+
+        .footer-nav a {
+            font-family: var(--font-sans);
+            font-size: 0.75rem;
+            font-weight: 300;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            text-decoration: none;
+            color: var(--color-ink-light);
+            transition: color 0.3s ease;
+        }
+
+        .footer-nav a:hover { color: var(--color-ink); }
+
+        .footer-nav .current {
+            color: var(--color-accent-text);
+        }
+
+        @media (max-width: 768px) {
+            .nav-bar { padding: 1rem 1.5rem; }
+            .nav-links { gap: 1rem; }
+            .article-container { padding: 4rem 1.5rem; }
+            .expedition-notes { padding: 2rem 1.5rem; }
+            .chapter p:first-of-type::first-letter { font-size: 2.5rem; }
+        }
+    
+        /* ========================================================
+           POLISH — typography refinement, accessible focus states,
+           button / link micro-interactions, small editorial details
+           ======================================================== */
+
+        body {
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            text-rendering: optimizeLegibility;
+            font-variant-numeric: oldstyle-nums;
+        }
+
+        h1, h2, h3 { text-wrap: balance; }
+
+        p { text-wrap: pretty; orphans: 3; widows: 3; }
+
+        .pull-quote p, .cinematic-opening, .final-reflection p, .welcome-section p {
+            hanging-punctuation: first allow-end;
+        }
+
+        ::selection {
+            background: var(--color-accent);
+            color: var(--color-parchment, #faf8f5);
+        }
+
+        /* Keyboard focus states */
+        a:focus-visible,
+        .scroll-indicator:focus-visible,
+        .expedition-card:focus-visible {
+            outline: 1px solid var(--color-accent);
+            outline-offset: 4px;
+            border-radius: 1px;
+        }
+
+        /* Scroll indicator: now a real, clickable, focusable link */
+        .scroll-indicator {
+            text-decoration: none;
+            transition: opacity 0.3s ease;
+        }
+        .scroll-indicator:hover { opacity: 0.65 !important; }
+
+        /* Primary CTA */
+        .closing-cta {
+            cursor: pointer;
+            transition: background 0.3s ease, color 0.3s ease, letter-spacing 0.3s ease, box-shadow 0.3s ease, transform 0.15s ease;
+        }
+        .closing-cta:hover { letter-spacing: 5px; box-shadow: 0 10px 30px rgba(0,0,0,0.25); }
+        .closing-cta:active { transform: scale(0.97); }
+
+        /* Expedition cards */
+        .expedition-card { cursor: pointer; }
+        .expedition-card:active { transform: translateY(-1px) scale(0.995); }
+
+        /* Nav links: animated underline */
+        .nav-links a { position: relative; }
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            left: 0;
+            right: 100%;
+            bottom: -4px;
+            height: 1px;
+            background: currentColor;
+            transition: right 0.3s ease;
+        }
+        .nav-links a:hover::after { right: 0; }
+
+        /* Footer prev/next: directional nudge on hover */
+        .footer-nav a {
+            display: inline-block;
+            transition: color 0.3s ease, transform 0.3s ease;
+        }
+        .footer-nav a:first-child:hover { transform: translateX(-4px); }
+        .footer-nav a:last-child:hover { transform: translateX(4px); }
+
+        /* Respect reduced-motion preference */
+        @media (prefers-reduced-motion: reduce) {
+            *, *::before, *::after {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+                scroll-behavior: auto !important;
+            }
+        }
+
+    </style>
+</head>
+<body>
+    <nav class="nav-bar" id="navbar">
+        <a href="index.html" class="nav-logo">The Unreal Atlas</a>
+        <div class="nav-links">
+            <a href="index.html#expeditions">Expeditions</a>
+            <a href="index.html#about">About</a>
+        </div>
+    </nav>
+
+    <header class="hero">
+        <div class="hero-content">
+            <p class="expedition-number">Expedition 010</p>
+            <h1>Giant's Causeway</h1>
+            <p class="hero-subtitle">The Stairway Built by Giants</p>
+            <p class="hero-location">County Antrim, Northern Ireland · Causeway Coast</p>
+            <p class="reading-time">Reading Time: 12 minutes</p>
+        </div>
+        <a href="#begin" class="scroll-indicator" aria-label="Scroll to begin reading">
+            <span></span>
+            <p>Begin</p>
+        </a>
+    </header>
+
+    <article class="article-container" id="begin">
+        <div class="cinematic-opening">
+            On a coast where the Atlantic crashes against ancient stone, there is a place where the rocks have been arranged with a precision that seems impossible. Thousands of columns, each one a perfect hexagon, fit together like the cells of a honeycomb, rising from the sea in a stairway that leads nowhere and everywhere at once. The locals will tell you that a giant built it. Science will tell you something even more extraordinary.
+        </div>
+
+        <section class="chapter" data-chapter="1">
+            <p class="chapter-number">Chapter I</p>
+            <h2>The Legend of Fionn mac Cumhail</h2>
+            <p>Long before geologists arrived with their hammers and their theories, the people of this coast had their own explanation for the strange formations that rose from the sea. They told the story of Fionn mac Cumhail, a giant who lived on the Antrim coast and who one day decided to build a causeway across the North Channel to Scotland. His reason varied with the telling. In some versions, he wanted to reach his Scottish rival, the giant Benandonner, and challenge him to combat. In others, he wanted to visit his lover, a Scottish giantess who lived on the other side. In still others, he simply wanted to prove that he could do it, that no feat of engineering was beyond the strength of an Irish giant.</p>
+            <p>The story continues with Fionn building the causeway, carrying enormous blocks of stone from the cliffs and setting them in place with a precision that no mortal could match. The columns rose from the sea, a pathway of stone that stretched toward the horizon. But before Fionn could complete his journey, he received word that Benandonner was coming to meet him, and that the Scottish giant was much larger than Fionn had anticipated. Fionn, realizing that he was outmatched, devised a plan. He dressed himself as a baby and lay in a cradle, waiting for Benandonner to arrive.</p>
+            <p>When Benandonner crossed the causeway and entered Fionn's house, he saw the "baby" in the cradle and was struck with terror. If this was the size of Fionn's child, he reasoned, then Fionn himself must be enormous. Benandonner fled back across the causeway, destroying it behind him so that Fionn could not follow. The remaining columns, the ones that still stand on the Antrim coast, are all that is left of Fionn's great work. The Scottish side of the causeway, at Fingal's Cave on the island of Staffa, is said to be the remnants of the path that Benandonner destroyed in his flight.</p>
+            <p>The legend is not merely a story. It is a way of understanding a landscape that defies ordinary explanation. The columns are too regular, too precise, too orderly to have been created by chance. They look like the work of intelligence, of design, of purpose. And in the absence of scientific knowledge, the legend of the giant provides a framework for making sense of what the eye sees. The giant is a metaphor for the scale of the forces that created the causeway, a human-scale story that captures something of the awe that the formations inspire.</p>
+
+            <div class="pull-quote">
+                <p>"The columns are too regular, too precise, too orderly to have been created by chance. They look like the work of intelligence, of design, of purpose."</p>
+                <cite>— The Unreal Atlas</cite>
+            </div>
+
+            <p>The legend has persisted for centuries, passed down through generations of storytellers, adapted and embellished by each teller who added their own details and interpretations. It has been written down, sung in ballads, and depicted in paintings. It has become part of the cultural identity of the region, a story that connects the people to their landscape in a way that science cannot. The giant may not be real, but the story is. And in the story, there is a truth that goes deeper than the facts of geology.</p>
+        </section>
+
+        <section class="chapter" data-chapter="2">
+            <p class="chapter-number">Chapter II</p>
+            <h2>The Volcanic Staircase</h2>
+            <p>The scientific story of the Giant's Causeway is no less extraordinary than the legend, though it operates on a different scale of time and imagination. The columns were formed approximately 50 to 60 million years ago, during the Paleogene period, when the region that is now Northern Ireland was the site of intense volcanic activity. The North Atlantic was opening, the tectonic plates were pulling apart, and magma was rising from deep within the Earth's mantle to fill the gap.</p>
+            <p>The magma did not erupt explosively, as in a typical volcanic eruption. Instead, it flowed out of fissures in the Earth's crust as lava, spreading across the landscape in vast sheets. These lava flows were not the thin, fluid lavas that flow from Hawaiian volcanoes. They were thick, viscous flood basalts, similar to those that cover large areas of the Pacific Northwest and the Deccan Plateau in India. The lava that formed the Giant's Causeway was part of the Thulean Plateau, a massive volcanic province that covered much of what is now the North Atlantic region.</p>
+            <p>As the lava cooled, it contracted. Basalt, like most rocks, shrinks as it cools, and the shrinkage creates stress within the rock. If the cooling is uniform and the lava is of a consistent thickness, this stress is relieved by the formation of cracks, which propagate through the rock in a regular pattern. The cracks form at approximately 120-degree angles to each other, creating a network of hexagonal columns. This is not a coincidence. The hexagon is the most efficient shape for partitioning a plane into equal areas with the minimum perimeter, a mathematical principle that nature follows without conscious intention.</p>
+            <p>The columns at the Giant's Causeway are not all perfect hexagons. Geologists have counted the sides of thousands of columns, and the distribution is approximately: 46 percent hexagons, 27 percent pentagons, 18 percent heptagons, and smaller percentages of columns with four, eight, nine, or even ten sides. The variation is a result of local irregularities in the cooling process, areas where the lava was not perfectly uniform or where the cooling was affected by nearby features. But the hexagon dominates, and the overall effect is one of remarkable regularity.</p>
+            <p>The columns are not all the same size. They range in diameter from approximately 30 centimeters to over 50 centimeters, with the average being around 45 centimeters. The height of the columns varies as well, from just a few meters to over 12 meters in the tallest sections. The columns are not perfectly vertical; in some areas, they tilt at angles of up to 20 degrees, a result of the lava flow's original slope or of tectonic movements that occurred after the columns formed. There are approximately 40,000 columns in the main exposure of the causeway, though the total number in the surrounding area is much higher.</p>
+        </section>
+
+        <section class="chapter" data-chapter="3">
+            <p class="chapter-number">Chapter III</p>
+            <h2>The Geometric Miracle</h2>
+            <p>The hexagonal columns of the Giant's Causeway are not unique. Similar formations exist in many places around the world, wherever flood basalts have cooled slowly and uniformly. The Devil's Postpile in California, the Svartifoss waterfall in Iceland, the Organ Pipes National Park in Australia, and the Fingal's Cave on Staffa are all examples of columnar basalt formations. But the Giant's Causeway is the most famous, and arguably the most impressive, of them all.</p>
+            <p>What makes the Giant's Causeway special is not merely the columns themselves, but their setting. The columns emerge from the sea at the base of towering cliffs, creating a landscape that combines the geometric precision of the stone with the wild power of the ocean. The Atlantic crashes against the columns with a force that has been sculpting the coast for millions of years, wearing away the rock, creating sea caves and arches, and exposing new columns as the older ones are eroded. The interaction between the regular, human-scale geometry of the columns and the vast, chaotic power of the sea creates a contrast that is both beautiful and thought-provoking.</p>
+            <p>The columns are not merely a surface feature. They extend deep into the cliff, forming a three-dimensional network of hexagonal cells that penetrates the rock for tens of meters. In places, the columns have been eroded by the sea to create structures that resemble organ pipes, cathedral vaults, or the pipes of a massive pan flute. The Giant's Organ, a section of particularly tall columns that rises from the cliff face, is one of the most photographed features of the causeway, its vertical lines creating a visual rhythm that draws the eye upward.</p>
+            <p>The scientific study of columnar jointing has a long history. The first systematic description of the Giant's Causeway was made by the Royal Society of London in 1693, and the formation has been studied by geologists ever since. The understanding of how the columns form has evolved over time, from early theories that attributed them to crystallization or sedimentation, to the modern understanding of thermal contraction and fracture mechanics. Today, the columns are recognized as one of the classic examples of a natural pattern-forming process, a phenomenon that can be modeled mathematically and reproduced in laboratory experiments.</p>
+            <p>And yet, for all the scientific understanding, the columns retain their power to inspire wonder. Knowing how they formed does not diminish their beauty. If anything, it enhances it, by revealing the deep connections between the simple laws of physics and the complex patterns of the natural world. The hexagon is not merely a shape. It is a solution to a mathematical problem, an optimal configuration that emerges whenever the conditions are right. The Giant's Causeway is a monument to the power of natural law, a demonstration that the universe is not random but ordered, not chaotic but structured, not meaningless but full of patterns waiting to be discovered.</p>
+        </section>
+
+        <section class="chapter" data-chapter="4">
+            <p class="chapter-number">Chapter IV</p>
+            <h2>The Causeway Coast</h2>
+            <p>The Giant's Causeway is not an isolated feature. It is part of a coastline that is rich in geological and cultural history, a landscape that has been shaped by millions of years of volcanic activity, glaciation, and coastal erosion. The Causeway Coast, as it is known, stretches for approximately 30 kilometers from Portrush to Ballycastle, encompassing not only the Giant's Causeway but also a series of other remarkable features.</p>
+            <p>To the east of the causeway lies the Carrick-a-Rede rope bridge, a narrow suspension bridge that spans a 30-meter chasm between the mainland and a small island. The bridge was originally erected by salmon fishermen who needed to reach the island's fishing grounds, and it has become a popular tourist attraction, offering views of the coast that are both exhilarating and terrifying. The island itself is a volcanic plug, a remnant of the same volcanic activity that created the causeway, and it is home to seabirds and marine life that thrive in the rich waters of the North Channel.</p>
+            <p>Further along the coast is Dunluce Castle, a medieval fortress perched on the edge of a cliff, its ruins a testament to the strategic importance of this coastline throughout history. The castle was built by the Normans in the 13th century and was later occupied by the Scottish MacDonnell clan, who used it as a base for their control of the Antrim coast. The castle's kitchen famously collapsed into the sea during a storm in 1639, taking several servants with it, and the event is said to have convinced the MacDonnells to abandon the castle for a more secure residence inland.</p>
+            <p>The coast is also rich in biological diversity. The cliffs are home to colonies of seabirds, including puffins, guillemots, and razorbills, which nest in the crevices and ledges of the rock. The waters offshore are frequented by seals, dolphins, and basking sharks, and the intertidal zones are rich in marine life, from seaweeds and shellfish to the occasional octopus. The combination of geological and biological diversity makes the Causeway Coast one of the most important natural areas in the British Isles, a place where the history of the Earth is written in stone and the history of life is written in the creatures that inhabit it.</p>
+            <p>In 1986, the Giant's Causeway and the Causeway Coast were designated a UNESCO World Heritage Site, recognizing their outstanding universal value. The site is managed by the National Trust, which works to balance conservation with public access, ensuring that the formations are protected for future generations while allowing visitors to experience their beauty. The visitor center, designed by the architectural firm Heneghan Peng, is a striking modern building that is partially buried in the landscape, its design intended to minimize visual impact while providing educational facilities and access to the site.</p>
+        </section>
+
+        <div class="expedition-notes">
+            <h3>Expedition Notes</h3>
+            <ul>
+                <li>Columns formed 50–60 million years ago during the Paleogene period</li>
+                <li>Approximately 40,000 columns in the main exposure</li>
+                <li>Column diameters range from 30–50+ cm; average ~45 cm</li>
+                <li>Column shapes: 46% hexagons, 27% pentagons, 18% heptagons</li>
+                <li>Columns reach heights of over 12 meters</li>
+                <li>Part of the Thulean Plateau flood basalt province</li>
+                <li>Designated a UNESCO World Heritage Site in 1986</li>
+                <li>Similar formations exist worldwide: Devil's Postpile, Svartifoss, Fingal's Cave</li>
+            </ul>
+        </div>
+
+        <div class="final-reflection">
+            <h3>Final Reflection</h3>
+            <p>The Giant's Causeway is a place where myth and science meet, where the stories we tell about the world intersect with the truths we discover about it. The legend of Fionn mac Cumhail and the theory of columnar jointing are not competitors. They are complementary ways of understanding a landscape that is too extraordinary to be captured by any single perspective. The giant gives us a story that connects us to the place, that makes it meaningful in human terms. The geology gives us a story that connects us to the deep time of the Earth, that reminds us of the vast processes that have shaped the world we inhabit. Together, they create a richness of understanding that neither could achieve alone. The Giant's Causeway is not merely a natural wonder. It is a reminder that wonder itself is a form of knowledge, a way of knowing the world that is as valid and as valuable as any scientific theory. The giant may not have built the causeway. But in a sense, he did. He built it in our imaginations, and in our imaginations, it stands as solid as stone.</p>
+        </div>
+    </article>
+
+    <nav class="footer-nav">
+        <a href="expedition_009.html">← Previous</a>
+        <span class="current">Expedition 010 of 010</span>
+        <a href="index.html">Return to Atlas →</a>
+    </nav>
+
+    <script>
+        const navbar = document.getElementById('navbar');
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 100) {
+                navbar.classList.add('scrolled');
+            } else {
+                navbar.classList.remove('scrolled');
+            }
+        });
+
+        const chapters = document.querySelectorAll('.chapter');
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, { threshold: 0.15 });
+
+        chapters.forEach(chapter => observer.observe(chapter));
+    </script>
+</body>
+</html>

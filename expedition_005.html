@@ -1,0 +1,622 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Expedition 005 — Antelope Canyon | The Unreal Atlas</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Inter:wght@200;300;400;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --color-ink: #1a1a1a;
+            --color-ink-light: #4a4a4a;
+            --color-ink-muted: #7a7a7a;
+            --color-parchment: #faf6f0;
+            --color-parchment-warm: #f5ede0;
+            --color-accent: #c4845a;
+            --color-accent-text: #946444;
+            --color-sand: #d4a574;
+            --font-serif: 'Cormorant Garamond', Georgia, serif;
+            --font-sans: 'Inter', -apple-system, sans-serif;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: var(--font-serif);
+            background: var(--color-parchment);
+            color: var(--color-ink);
+            line-height: 1.7;
+            overflow-x: hidden;
+        }
+
+        .hero {
+            position: relative;
+            height: 100vh;
+            min-height: 700px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            background: linear-gradient(160deg, #e8d5c0 0%, #d4b898 20%, #c4a070 50%, #b89058 80%, #a87840 100%);
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: 
+                radial-gradient(ellipse at 40% 60%, rgba(255,200,120,0.3) 0%, transparent 50%),
+                radial-gradient(ellipse at 60% 40%, rgba(255,180,100,0.2) 0%, transparent 40%);
+            z-index: 1;
+        }
+
+        .hero::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 50%;
+            background: linear-gradient(to top, var(--color-parchment) 0%, transparent 100%);
+            z-index: 2;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 10;
+            text-align: center;
+            padding: 2rem;
+        }
+
+        .expedition-number {
+            font-family: var(--font-sans);
+            font-size: 0.7rem;
+            font-weight: 300;
+            letter-spacing: 6px;
+            text-transform: uppercase;
+            color: rgba(255,255,255,0.6);
+            margin-bottom: 1.5rem;
+            opacity: 0;
+            animation: fadeInUp 1.2s ease 0.3s forwards;
+        }
+
+        .hero h1 {
+            font-size: clamp(2.5rem, 6vw, 5rem);
+            font-weight: 300;
+            letter-spacing: -1px;
+            line-height: 1.1;
+            margin-bottom: 1rem;
+            color: #fff8f0;
+            opacity: 0;
+            animation: fadeInUp 1.2s ease 0.6s forwards;
+        }
+
+        .hero-subtitle {
+            font-size: clamp(1rem, 2vw, 1.4rem);
+            font-weight: 300;
+            font-style: italic;
+            color: rgba(255,248,240,0.8);
+            opacity: 0;
+            animation: fadeInUp 1.2s ease 0.9s forwards;
+        }
+
+        .hero-location {
+            font-family: var(--font-sans);
+            font-size: 0.75rem;
+            font-weight: 300;
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            color: rgba(255,248,240,0.5);
+            margin-top: 2rem;
+            opacity: 0;
+            animation: fadeInUp 1.2s ease 1.2s forwards;
+        }
+
+        .reading-time {
+            font-family: var(--font-sans);
+            font-size: 0.7rem;
+            font-weight: 300;
+            letter-spacing: 2px;
+            color: rgba(255,248,240,0.4);
+            margin-top: 0.5rem;
+            opacity: 0;
+            animation: fadeInUp 1.2s ease 1.4s forwards;
+        }
+
+        .scroll-indicator {
+            position: absolute;
+            bottom: 3rem;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 10;
+            opacity: 0;
+            animation: fadeInUp 1.2s ease 2s forwards;
+        }
+
+        .scroll-indicator span {
+            display: block;
+            width: 1px;
+            height: 40px;
+            background: rgba(255,248,240,0.4);
+            margin: 0 auto;
+            animation: scrollPulse 2s ease-in-out infinite;
+        }
+
+        .scroll-indicator p {
+            font-family: var(--font-sans);
+            font-size: 0.6rem;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            color: rgba(255,248,240,0.4);
+            margin-top: 0.5rem;
+        }
+
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes scrollPulse {
+            0%, 100% { opacity: 0.3; transform: scaleY(1); }
+            50% { opacity: 1; transform: scaleY(1.2); }
+        }
+
+        .nav-bar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 100;
+            padding: 1.5rem 3rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: transparent;
+            transition: background 0.4s ease, backdrop-filter 0.4s ease;
+        }
+
+        .nav-bar.scrolled {
+            background: rgba(250, 246, 240, 0.95);
+            backdrop-filter: blur(20px);
+            box-shadow: 0 1px 0 rgba(0,0,0,0.05);
+        }
+
+        .nav-bar.scrolled .nav-logo,
+        .nav-bar.scrolled .nav-links a { color: var(--color-ink); }
+
+        .nav-logo {
+            font-family: var(--font-serif);
+            font-size: 1.1rem;
+            font-weight: 400;
+            letter-spacing: 2px;
+            text-decoration: none;
+            color: #fff8f0;
+            transition: color 0.4s ease;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+        }
+
+        .nav-links a {
+            font-family: var(--font-sans);
+            font-size: 0.7rem;
+            font-weight: 300;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            text-decoration: none;
+            color: rgba(255,248,240,0.7);
+            transition: color 0.3s ease;
+        }
+
+        .nav-links a:hover { color: #fff8f0; }
+
+        .article-container {
+            max-width: 720px;
+            margin: 0 auto;
+            padding: 6rem 2rem;
+        }
+
+        .cinematic-opening {
+            font-size: 1.35rem;
+            font-weight: 300;
+            line-height: 1.9;
+            color: var(--color-ink-light);
+            margin-bottom: 4rem;
+            text-align: center;
+            font-style: italic;
+        }
+
+        .cinematic-opening::before {
+            content: '';
+            display: block;
+            width: 40px;
+            height: 1px;
+            background: var(--color-accent);
+            margin: 0 auto 2rem;
+        }
+
+        .chapter {
+            margin-bottom: 5rem;
+            opacity: 0;
+            transform: translateY(40px);
+            transition: opacity 0.8s ease, transform 0.8s ease;
+        }
+
+        .chapter.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .chapter-number {
+            font-family: var(--font-sans);
+            font-size: 0.65rem;
+            font-weight: 300;
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            color: var(--color-accent-text);
+            margin-bottom: 1rem;
+        }
+
+        .chapter h2 {
+            font-size: clamp(1.6rem, 3vw, 2.2rem);
+            font-weight: 400;
+            margin-bottom: 2rem;
+            line-height: 1.3;
+        }
+
+        .chapter p {
+            font-size: 1.1rem;
+            line-height: 1.9;
+            margin-bottom: 1.5rem;
+            color: var(--color-ink-light);
+        }
+
+        .chapter p:first-of-type::first-letter {
+            font-size: 3.5rem;
+            float: left;
+            line-height: 1;
+            padding-right: 0.5rem;
+            padding-top: 0.2rem;
+            font-weight: 400;
+            color: var(--color-ink);
+        }
+
+        .pull-quote {
+            margin: 3rem 0;
+            padding: 2rem 0;
+            border-top: 1px solid var(--color-accent);
+            border-bottom: 1px solid var(--color-accent);
+            text-align: center;
+        }
+
+        .pull-quote p {
+            font-size: 1.5rem;
+            font-style: italic;
+            font-weight: 300;
+            line-height: 1.6;
+            color: var(--color-ink);
+            margin: 0;
+        }
+
+        .pull-quote cite {
+            display: block;
+            font-family: var(--font-sans);
+            font-size: 0.7rem;
+            font-style: normal;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            color: var(--color-ink-muted);
+            margin-top: 1rem;
+        }
+
+        .expedition-notes {
+            background: var(--color-parchment-warm);
+            padding: 3rem;
+            margin: 4rem 0;
+            border-left: 3px solid var(--color-accent);
+        }
+
+        .expedition-notes h3 {
+            font-family: var(--font-sans);
+            font-size: 0.7rem;
+            font-weight: 400;
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            color: var(--color-accent-text);
+            margin-bottom: 1.5rem;
+        }
+
+        .expedition-notes ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .expedition-notes li {
+            font-family: var(--font-sans);
+            font-size: 0.85rem;
+            line-height: 2;
+            color: var(--color-ink-light);
+            padding-left: 1.5rem;
+            position: relative;
+        }
+
+        .expedition-notes li::before {
+            content: '—';
+            position: absolute;
+            left: 0;
+            color: var(--color-accent-text);
+        }
+
+        .final-reflection {
+            margin-top: 5rem;
+            padding-top: 3rem;
+            border-top: 1px solid rgba(0,0,0,0.1);
+        }
+
+        .final-reflection h3 {
+            font-family: var(--font-sans);
+            font-size: 0.7rem;
+            font-weight: 400;
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            color: var(--color-accent-text);
+            margin-bottom: 1.5rem;
+        }
+
+        .final-reflection p {
+            font-size: 1.2rem;
+            font-style: italic;
+            line-height: 2;
+            color: var(--color-ink-light);
+        }
+
+        .footer-nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 3rem;
+            border-top: 1px solid rgba(0,0,0,0.1);
+            max-width: 720px;
+            margin: 0 auto;
+        }
+
+        .footer-nav a {
+            font-family: var(--font-sans);
+            font-size: 0.75rem;
+            font-weight: 300;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            text-decoration: none;
+            color: var(--color-ink-light);
+            transition: color 0.3s ease;
+        }
+
+        .footer-nav a:hover { color: var(--color-ink); }
+
+        .footer-nav .current {
+            color: var(--color-accent-text);
+        }
+
+        @media (max-width: 768px) {
+            .nav-bar { padding: 1rem 1.5rem; }
+            .nav-links { gap: 1rem; }
+            .article-container { padding: 4rem 1.5rem; }
+            .expedition-notes { padding: 2rem 1.5rem; }
+            .chapter p:first-of-type::first-letter { font-size: 2.5rem; }
+        }
+    
+        /* ========================================================
+           POLISH — typography refinement, accessible focus states,
+           button / link micro-interactions, small editorial details
+           ======================================================== */
+
+        body {
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            text-rendering: optimizeLegibility;
+            font-variant-numeric: oldstyle-nums;
+        }
+
+        h1, h2, h3 { text-wrap: balance; }
+
+        p { text-wrap: pretty; orphans: 3; widows: 3; }
+
+        .pull-quote p, .cinematic-opening, .final-reflection p, .welcome-section p {
+            hanging-punctuation: first allow-end;
+        }
+
+        ::selection {
+            background: var(--color-accent);
+            color: var(--color-parchment, #faf8f5);
+        }
+
+        /* Keyboard focus states */
+        a:focus-visible,
+        .scroll-indicator:focus-visible,
+        .expedition-card:focus-visible {
+            outline: 1px solid var(--color-accent);
+            outline-offset: 4px;
+            border-radius: 1px;
+        }
+
+        /* Scroll indicator: now a real, clickable, focusable link */
+        .scroll-indicator {
+            text-decoration: none;
+            transition: opacity 0.3s ease;
+        }
+        .scroll-indicator:hover { opacity: 0.65 !important; }
+
+        /* Primary CTA */
+        .closing-cta {
+            cursor: pointer;
+            transition: background 0.3s ease, color 0.3s ease, letter-spacing 0.3s ease, box-shadow 0.3s ease, transform 0.15s ease;
+        }
+        .closing-cta:hover { letter-spacing: 5px; box-shadow: 0 10px 30px rgba(0,0,0,0.25); }
+        .closing-cta:active { transform: scale(0.97); }
+
+        /* Expedition cards */
+        .expedition-card { cursor: pointer; }
+        .expedition-card:active { transform: translateY(-1px) scale(0.995); }
+
+        /* Nav links: animated underline */
+        .nav-links a { position: relative; }
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            left: 0;
+            right: 100%;
+            bottom: -4px;
+            height: 1px;
+            background: currentColor;
+            transition: right 0.3s ease;
+        }
+        .nav-links a:hover::after { right: 0; }
+
+        /* Footer prev/next: directional nudge on hover */
+        .footer-nav a {
+            display: inline-block;
+            transition: color 0.3s ease, transform 0.3s ease;
+        }
+        .footer-nav a:first-child:hover { transform: translateX(-4px); }
+        .footer-nav a:last-child:hover { transform: translateX(4px); }
+
+        /* Respect reduced-motion preference */
+        @media (prefers-reduced-motion: reduce) {
+            *, *::before, *::after {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+                scroll-behavior: auto !important;
+            }
+        }
+
+    </style>
+</head>
+<body>
+    <nav class="nav-bar" id="navbar">
+        <a href="index.html" class="nav-logo">The Unreal Atlas</a>
+        <div class="nav-links">
+            <a href="index.html#expeditions">Expeditions</a>
+            <a href="index.html#about">About</a>
+        </div>
+    </nav>
+
+    <header class="hero">
+        <div class="hero-content">
+            <p class="expedition-number">Expedition 005</p>
+            <h1>Antelope Canyon</h1>
+            <p class="hero-subtitle">Where Sunlight Becomes Art</p>
+            <p class="hero-location">Page, Arizona, USA · Navajo Nation</p>
+            <p class="reading-time">Reading Time: 12 minutes</p>
+        </div>
+        <a href="#begin" class="scroll-indicator" aria-label="Scroll to begin reading">
+            <span></span>
+            <p>Begin</p>
+        </a>
+    </header>
+
+    <article class="article-container" id="begin">
+        <div class="cinematic-opening">
+            There is a place where stone has learned to flow like water, where light falls in beams so solid you could almost touch them, where the walls curve and swirl in patterns that no human hand could ever carve. It is a cathedral built by flash floods and patience, a gallery where the only artist is time itself.
+        </div>
+
+        <section class="chapter" data-chapter="1">
+            <p class="chapter-number">Chapter I</p>
+            <h2>The Slot</h2>
+            <p>Antelope Canyon is not a canyon in the conventional sense. It does not stretch for miles across an open landscape, its walls visible from a distance, its grandeur apparent to anyone who approaches. It is a slot canyon, a narrow fissure in the sandstone that is barely wide enough to walk through in places, its walls rising 40 meters or more on either side while the gap between them narrows to less than a meter. From above, it is invisible. From within, it is overwhelming.</p>
+            <p>The canyon lies on Navajo land, near the town of Page in northern Arizona. It is part of the LeChee Chapter of the Navajo Nation, and access is controlled by the Navajo people, who have lived in this region for centuries. The Navajo name for the canyon is Tsé bighánílíní, which means "the place where water runs through rocks." It is a name that captures the essence of what the canyon is and how it was formed. Water, not wind, is the sculptor here. Water, moving with terrifying speed and power, carving its way through stone over millions of years.</p>
+            <p>The rock is Navajo Sandstone, a formation that was deposited during the Jurassic period, approximately 190 to 170 million years ago. At that time, this region was a vast desert, part of a sand sea that covered much of what is now the American Southwest. The dunes were enormous, some reaching heights of over 300 meters, and they shifted and migrated with the winds that blew across the ancient landscape. Over time, the sand was buried, compacted, and cemented into stone by minerals dissolved in groundwater. The result was a formation of sandstone that is both beautiful and durable, its layers preserving the cross-bedded patterns of the ancient dunes.</p>
+            <p>But sandstone, for all its beauty, is porous. Water can seep into it, dissolve its cementing minerals, and weaken its structure. And when water moves fast—when it comes not as a gentle rain but as a flash flood, a wall of water that crashes through the landscape with the force of a freight train—it can carve channels through the rock with astonishing speed. This is what happened at Antelope Canyon. Over millions of years, flash floods have scoured the sandstone, following the path of least resistance, deepening and widening a fissure that began as a crack and became a canyon.</p>
+
+            <div class="pull-quote">
+                <p>"From above, it is invisible. From within, it is overwhelming."</p>
+                <cite>— The Unreal Atlas</cite>
+            </div>
+
+            <p>The process is still ongoing. Every summer, the monsoon rains bring flash floods that surge through the canyon, carrying sand and debris that scour the walls and deepen the channel. The floods are dangerous and unpredictable. In 1997, a flash flood swept through Lower Antelope Canyon, killing eleven tourists who had been exploring the narrow passages. The canyon is a place of beauty, but it is also a place of power, a reminder that the forces that shaped it are still active, still capable of destruction.</p>
+            <p>There are two main sections of Antelope Canyon: Upper Antelope Canyon, known to the Navajo as Tsé bighánílíní, and Lower Antelope Canyon, called Hazdistazí, or "spiral rock arches." Upper Antelope is the more famous of the two, its entrance at ground level making it accessible to a wider range of visitors. Lower Antelope requires visitors to descend by ladder into a narrow crack in the earth, a passage that is both more challenging and more intimate. Both sections share the same fundamental character: walls of flowing, swirling sandstone, shaped by water and time into forms that seem almost organic.</p>
+        </section>
+
+        <section class="chapter" data-chapter="2">
+            <p class="chapter-number">Chapter II</p>
+            <h2>The Light Beams</h2>
+            <p>The most famous feature of Antelope Canyon is not its walls, but its light. At certain times of day, when the sun is high and the sky is clear, beams of light penetrate the narrow opening at the top of the canyon and fall to the floor in solid, luminous columns. They are not merely bright; they are tangible, almost physical, as if the light itself had become a substance that could be touched and weighed.</p>
+            <p>The effect is created by the canyon's geometry. The narrow opening at the top acts like a lens, focusing the sunlight into a concentrated beam that illuminates the dust and sand particles suspended in the air. The particles scatter the light, making the beam visible in a way that it would not be in open air. The result is a column of light that seems to descend from the sky like a divine messenger, touching the canyon floor with a brilliance that is almost blinding.</p>
+            <p>The light beams are most dramatic in Upper Antelope Canyon, where the opening is wider and the sun's path aligns more directly with the canyon's axis. They appear most frequently between late March and early October, when the sun is high enough to penetrate the narrow slot. The best time is between 10 a.m. and 1 p.m., when the sun is near its zenith and the beams are at their most intense. Photographers from around the world converge on the canyon during these hours, their cameras and tripods filling the narrow space, each one hoping to capture a moment of light that will never be exactly repeated.</p>
+            <p>But the light is not the only spectacle. The walls themselves are a study in color and texture. The sandstone ranges from pale cream to deep orange, its surface marked by the cross-bedding of the ancient dunes, the layers tilting and curving in patterns that suggest movement frozen in stone. The water has smoothed and polished the surfaces, creating flows and swirls that resemble the patterns of a marble sculpture or the brushstrokes of an abstract painting. In places, the walls narrow so dramatically that you must turn sideways to pass, the rock pressing in on both sides like the embrace of the earth itself.</p>
+            <p>The colors shift with the light. In the early morning, the canyon is cool and shadowed, the walls appearing in shades of blue and gray. As the sun rises, the colors warm, the sandstone glowing in hues of gold and amber. At midday, when the light beams are at their most intense, the walls seem to catch fire, the orange and red tones blazing with an intensity that is almost overwhelming. In the late afternoon, the light softens, the colors deepening to rose and violet, the canyon becoming a place of quiet beauty rather than dramatic spectacle.</p>
+        </section>
+
+        <section class="chapter" data-chapter="3">
+            <p class="chapter-number">Chapter III</p>
+            <h2>The Flow of Stone</h2>
+            <p>There is a quality to the walls of Antelope Canyon that defies easy description. They are not merely curved; they are fluid, as if the stone had once been liquid and had been frozen in the act of flowing. The patterns are organic, reminiscent of the whorls of a fingerprint, the curves of a seashell, or the ripples of sand on a beach. They suggest a process that is not random but purposeful, as if the water had been guided by an aesthetic sensibility that human artists can only aspire to.</p>
+            <p>The scientific explanation is both simpler and more complex than the appearance suggests. The patterns are the result of differential erosion, a process in which some parts of the rock are worn away more quickly than others. The cross-bedding of the Navajo Sandstone creates layers of varying hardness and porosity. When water flows through the canyon, it erodes the softer layers more quickly, leaving the harder layers protruding. Over time, this differential erosion creates the flowing, swirling patterns that make the canyon so visually striking.</p>
+            <p>But the patterns are also influenced by the physics of fluid dynamics. Water, like any fluid, tends to flow in patterns that minimize energy expenditure. When it encounters an obstacle, it flows around it, creating eddies and vortices that leave their mark on the rock. The walls of Antelope Canyon are, in a very real sense, a record of the fluid dynamics of flash floods, a three-dimensional map of water's movement through stone over millions of years.</p>
+            <p>The result is a space that feels alive. The walls seem to pulse and flow, their curves suggesting movement even in stillness. The light changes constantly, shifting with the sun's position and the dust in the air, creating patterns of shadow and illumination that are never the same twice. Standing in the canyon, you have the sense of being inside something that is still in the process of becoming, a work of art that is not yet finished and never will be.</p>
+            <p>The Navajo people have long understood the spiritual significance of this place. The canyon is considered sacred, a place where the forces of nature are particularly powerful and where the boundary between the physical and spiritual worlds is thin. Visitors are required to be accompanied by a Navajo guide, not merely for safety, but because the canyon is part of the Navajo homeland, a place that belongs to a people who have lived in harmony with this landscape for generations. The guides share stories and legends, explaining the canyon's significance in Navajo culture and reminding visitors that this is not merely a tourist attraction, but a place of deep cultural and spiritual meaning.</p>
+        </section>
+
+        <section class="chapter" data-chapter="4">
+            <p class="chapter-number">Chapter IV</p>
+            <h2>The Photographer's Dilemma</h2>
+            <p>Antelope Canyon is one of the most photographed places on Earth. Images of its light beams and swirling walls have appeared in countless magazines, books, and advertisements, making it a symbol of the American Southwest's natural beauty. But the popularity of the canyon raises difficult questions about the relationship between nature and photography, between experience and representation.</p>
+            <p>The canyon is narrow, and the number of visitors is limited by the Navajo Nation to protect both the environment and the visitor experience. Tours are conducted in small groups, led by Navajo guides who control the flow of people through the canyon. Photography is permitted, but tripods are restricted in some areas, and the guides work to ensure that the canyon remains a place of wonder rather than a backdrop for Instagram posts. It is a delicate balance, one that reflects the broader tensions between tourism and preservation, between sharing natural beauty and protecting it from the very attention that makes it valuable.</p>
+            <p>The photographs, for all their beauty, cannot capture the full experience of being in the canyon. They cannot convey the coolness of the air, the texture of the sandstone beneath your fingertips, the sound of your own breathing in the silence. They cannot capture the sense of enclosure, the way the walls seem to press in on you, the mixture of claustrophobia and awe that the canyon inspires. A photograph is a fragment, a moment extracted from time, and no fragment can contain the whole.</p>
+            <p>And yet, the photographs have value. They have brought the canyon to the attention of millions of people who might never have known of its existence. They have inspired conservation efforts, raised awareness of Navajo culture, and created economic opportunities for the local community. The canyon's fame is not without its costs—the crowds, the commercialization, the pressure on a fragile environment—but it has also ensured that this extraordinary place will be protected for future generations.</p>
+            <p>The challenge for the visitor is to see beyond the photograph, to experience the canyon not as an image to be captured, but as a place to be inhabited. To stand in the silence, to feel the stone, to watch the light shift and change, to understand that this is not a backdrop but a world, a living, breathing space that has been forming for millions of years and will continue to form long after we are gone. The canyon does not need our photographs. It needs our attention, our respect, and our willingness to be present in a place that is older and wiser than anything we have created.</p>
+        </section>
+
+        <div class="expedition-notes">
+            <h3>Expedition Notes</h3>
+            <ul>
+                <li>Navajo Sandstone deposited during the Jurassic period (190–170 million years ago)</li>
+                <li>Upper Antelope Canyon entrance is at ground level; Lower requires ladders</li>
+                <li>Light beams are most dramatic March through October, 10 a.m.–1 p.m.</li>
+                <li>Canyon walls reach up to 40 meters high while narrowing to less than 1 meter wide</li>
+                <li>Flash floods continue to shape the canyon today</li>
+                <li>Navajo name: Tsé bighánílíní — "the place where water runs through rocks"</li>
+                <li>1997 flash flood killed eleven tourists in Lower Antelope Canyon</li>
+                <li>Access is controlled by the Navajo Nation; guides are mandatory</li>
+            </ul>
+        </div>
+
+        <div class="final-reflection">
+            <h3>Final Reflection</h3>
+            <p>Antelope Canyon teaches us that art does not require an artist. The flowing walls, the light beams, the colors that shift with the hour—all of these are the products of water, sand, and time, working together without intention or design. And yet, the result is more beautiful than anything a human hand could create. It suggests that beauty is not something we impose upon the world, but something that emerges from it, a byproduct of the same forces that shape mountains and carve rivers. The canyon is a reminder that we do not own beauty. We are merely its witnesses, privileged to stand for a moment in a space where stone has learned to flow and light has learned to dance, before moving on and leaving the canyon to its eternal, patient work.</p>
+        </div>
+    </article>
+
+    <nav class="footer-nav">
+        <a href="expedition_004.html">← Previous</a>
+        <span class="current">Expedition 005 of 010</span>
+        <a href="expedition_006.html">Next Expedition →</a>
+    </nav>
+
+    <script>
+        const navbar = document.getElementById('navbar');
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 100) {
+                navbar.classList.add('scrolled');
+            } else {
+                navbar.classList.remove('scrolled');
+            }
+        });
+
+        const chapters = document.querySelectorAll('.chapter');
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, { threshold: 0.15 });
+
+        chapters.forEach(chapter => observer.observe(chapter));
+    </script>
+</body>
+</html>
